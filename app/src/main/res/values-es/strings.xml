@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Witcom</string>
+    <string name="action_about">Acerca</string>
+    <string name="action_share">Compartir</string>
+    <string name="action_feeds">Noticias</string>
+    <string name="logo">WITCOM</string>
+    <string name="title_place_list"></string>
+    <string name="title_place_detail">Detalles</string>
+    <string name="title_conference_list">Programa</string>
+    <string name="title_conference_detail">Detalle del evento</string>
+    <string name="title_workshop_list">Talleres</string>
+    <string name="title_workshop_detail">Detalle del taller</string>
+
+    <string name="tourism">Turismo</string>
+    <string name="speakers">Conferencistas</string>
+    <string name="conferences">Programa</string>
+    <string name="workshops">Talleres</string>
+    <string name="how_to_arrive">Cómo llegar</string>
+    <string name="sketch">Lugar</string>
+
+    <string name="description">Descripción</string>
+    <string name="address">Dirección</string>
+    <string name="schedule">Horarios</string>
+    <string name="navigate">Navegar</string>
+    <string name="title_activity_witcom_program">Programa</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_witcom_workshop">Taller</string>
+
+    <string name="about">: ACERCA</string>
+    <string name="collaborators">{ COLABORADORES }</string>
+
+    <string name="organizers">{ ORGANIZADORES }</string>
+    <string name="miguel_felix">>_ Dr. Miguel Félix Mata Rivera</string>
+    <string name="carlos_nava">>_ M. en C. Carlos Hernández Nava</string>
+    <string name="miguel_alejandro">>_ M. en C. Miguel Alejandro Martínez Rosales</string>
+
+    <string name="developers">{ DESARROLLADORES }</string>
+    <string name="edgar_hernandez">>_ Edgar Hernández Solís</string>
+    <string name="oscar_lemus">>_ Oscar Alejandro Lemus Pichardo</string>
+    <string name="miguel_maldonado">>_ Miguel Armando Maldonado Vázquez</string>
+
+    <string name="navigation">Navegación</string>
+    <string name="how_get">¿Cómo desea llegar?</string>
+    <string name="data_usage">Esta opción puede consumir datos</string>
+    <string name="cancel">Cancelar</string>
+    <string name="ok">Aceptar</string>
+
+    <string name="car">Auto</string>
+    <string name="bicycle">Bicicleta</string>
+    <string name="walking">Caminando</string>
+
+    <string name="silao_address">UPIIG.-Av. Mineral de Valenciana No. 200 Col. Fracc. Industrial Puerto Interior, C.P. 36275 Silao de la Victoria, Guanajuato México Tel. (472) 74 84638 Conmutador: (55) 57 29 6000 Ext. 81301 Fax: 81450, Correo Electrónico: upiig@ipn.mx </string>
+
+    <string name="transition_pager">transition_pager</string>
+    <string name="transition_city">transition_city</string>
+    <string name="transition_place">transition_place</string>
+    <string name="transition_workshop">transition_workshop</string>
+    <string name="transition_conference">transition_conference</string>
+
+    <string name="updating">Actualizando</string>
+    <string name="wait">Por favor espere un momento</string>
+    <string name="update">Actualizar</string>
+
+    <string name="date">Fecha</string>
+    <string name="title">Título</string>
+    <string name="about_details">Más información</string>
+    <string name="place">Lugar</string>
+    <string name="monitor">Instructor</string>
+    <string name="notes">Notas</string>
+    <string name="author">Conferencista</string>
+    <string name="from">From</string>
+
+    <string name="no_connection">No tienes conexión a Internet</string>
+
+    <string name="update_content">Por favor, actualiza el\ncontenido (menú)</string>
+
+    <string name="title_activity_streaming">StreamingActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="stream">En vivo</string>
+
+    <string name="hq">Alta calidad</string>
+    <string name="lq">Baja calidad</string>
+
+    <string name="update_request">Por favor actualiza</string>
+    <string name="update_message">Nuevo contenido está disponible</string>
+
+    <string name="rate">Calificar</string>
+    <string name="notAttend">No asistí</string>
+
+    <string name="sponsor">Patrocinadores y Acerca de</string>
+    <string name="sponsors">{ Patrocinadores }</string>
+
+    <string name="upiig">{ UPIIG-IPN }</string>
+    <string name="telephone">Teléfono</string>
+    <string name="email">Correo electrónico</string>
+    <string name="witcom_address">UPIIG.-Av. Mineral de Valenciana No. 200 Col. Fracc. Industrial Puerto Interior, C.P. 36275 Silao de la Victoria, Guanajuato México</string>
+    <string name="witcom_telephone">(472) 74 84638 Conmutador: (55) 57 29 6000 Ext. 81301 \nFax: 81450</string>
+    <string name="witcom_email">upiig@ipn.mx</string>
+
+    <string name="leave_comment">Por favor, deja un comentario</string>
+    <string name="thank_you">Gracias</string>
+
+    <string name="rate_conference">Califica la conferencia</string>
+
+    <string name="swapEvent">Cambia a otro evento</string>
+</resources>

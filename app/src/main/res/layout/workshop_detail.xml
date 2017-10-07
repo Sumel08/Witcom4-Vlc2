@@ -1,0 +1,93 @@
+<LinearLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context="com.apps.edgarhz.witcom.workshop.WorkshopDetailFragment"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:paddingTop="30dp"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/textAppearanceLarge"
+        android:id="@+id/date"
+        android:layout_gravity="end"
+        android:text="date"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/textAppearanceLarge"
+        android:id="@+id/type"
+        android:layout_gravity="start"
+        android:text="type"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/textAppearanceLarge"
+        android:id="@+id/place"
+        android:paddingLeft="20dp"
+        android:text="place"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/textAppearanceLarge"
+        android:id="@+id/title"
+        android:paddingLeft="20dp"
+        android:text="title"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/textAppearanceLarge"
+        android:id="@+id/monitor"
+        android:paddingLeft="20dp"
+        android:text="monitor"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/textAppearanceLarge"
+        android:id="@+id/about"
+        android:paddingLeft="20dp"
+        android:text="about"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/textAppearanceLarge"
+        android:id="@+id/content"
+        android:paddingLeft="20dp"
+        android:text="content"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/textAppearanceLarge"
+        android:id="@+id/aboutEnd"
+        android:paddingLeft="20dp"
+        android:text="aboutEnd"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/textAppearanceLarge"
+        android:id="@+id/note"
+        android:paddingLeft="20dp"
+        android:text="note"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/textAppearanceLarge"
+        android:id="@+id/typeEnd"
+        android:text="typeEnd"/>
+
+
+</LinearLayout>

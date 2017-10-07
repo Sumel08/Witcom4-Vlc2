@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.upiita.witcom2016.pager.WitcomPagerActivity">
+
+    <item
+        android:id="@+id/update"
+        android:orderInCategory="100"
+        android:title="@string/update" />
+
+    <item
+        android:id="@+id/swapEvent"
+        android:orderInCategory="100"
+        android:title="@string/swapEvent" />
+
+</menu>

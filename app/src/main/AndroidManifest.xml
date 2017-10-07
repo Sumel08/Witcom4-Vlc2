@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.upiita.witcom2016">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".dataBaseHelper.Controller"
+        android:allowBackup="true"
+        android:icon="@drawable/witcomlogo"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".WitcomLogoActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".pager.WitcomPagerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".pager.WitcomBaseActivity"
+            android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".tourism.WitcomTourismActivity"
+            android:label="@string/tourism"
+            android:parentActivityName=".pager.WitcomPagerActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".tourism.PlaceListActivity"
+            android:label="@string/title_place_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".tourism.PlaceDetailActivity"
+            android:label="@string/title_place_detail"
+            android:parentActivityName=".tourism.PlaceListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.upiita.witcom2016.tourism.PlaceListActivity" />
+        </activity>
+        <activity
+            android:name=".speaker.WitcomSpeakerActivity"
+            android:label="@string/speakers"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.upiita.witcom2016.pager.WitcomPagerActivity" />
+        </activity>
+
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".sketch.WitcomSketchActivity"
+            android:label="@string/sketch"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.upiita.witcom2016.pager.WitcomPagerActivity" />
+        </activity>
+        <activity
+            android:name=".conference.ConferenceDetailActivity"
+            android:label="@string/title_conference_detail"
+            android:parentActivityName=".conference.WitcomProgramActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.upiita.witcom2016.conference.WitcomProgramActivity" />
+        </activity>
+        <activity
+            android:name=".workshop.WorkshopDetailActivity"
+            android:label="@string/title_workshop_detail"
+            android:parentActivityName=".workshop.WitcomWorkshopActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.upiita.witcom2016.workshop.WitcomWorkshopActivity" />
+        </activity>
+
+        <service android:name=".MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".WitcomStreetViewActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".conference.WitcomProgramActivity"
+            android:label="@string/title_activity_witcom_program"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.upiita.witcom2016.pager.WitcomPagerActivity" />
+        </activity>
+        <activity
+            android:name=".workshop.WitcomWorkshopActivity"
+            android:label="@string/title_activity_witcom_workshop"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.upiita.witcom2016.pager.WitcomPagerActivity" />
+        </activity>
+        <activity
+            android:name="io.vov.vitamio.activity.InitActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".streaming.StreamingActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_streaming"
+            android:screenOrientation="landscape"
+            android:theme="@style/FullscreenTheme" />
+        <activity android:name=".rate.RateActivity" />
+        <activity android:name=".EventsActivity" />
+        <activity android:name=".events.EventActivity" />
+        <activity
+            android:name=".events.NewEventActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_new_event"
+            android:theme="@style/FullscreenTheme"></activity>
+    </application>
+
+</manifest>

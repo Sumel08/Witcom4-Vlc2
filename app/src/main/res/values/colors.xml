@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#22232A</color>
+    <color name="colorPrimaryDark">#1C1D26</color>
+    <color name="colorAccent">#FF9A22</color>
+    <color name="custWhite">#EFEFEF</color>
+    <color name="textAccent">#0F5DBE</color>
+
+    <color name="black_overlay">#66000000</color>
+
+    <color name="rate_color">#CCFFFFFF</color>
+
+    <color name="witcom1">#0F5DBE</color>
+    <color name="witcom2">#EFEFEF</color>
+    <color name="witcom3">#FF9A22</color>
+
+    <color name="viewBg">#f1f5f8</color>
+    <color name="album_title">#4c4c4c</color>
+</resources>

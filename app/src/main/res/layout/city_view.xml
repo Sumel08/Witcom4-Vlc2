@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    card_view:cardCornerRadius="10dp"
+    card_view:cardElevation="4dp"
+    card_view:cardUseCompatPadding="true"
+    android:id="@+id/card_view_city"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/ivCV_city"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="centerCrop"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#55000000"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                android:layout_gravity="center_horizontal|center_vertical"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvCV_city"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+
+                android:textColor="#FFFFFF"
+
+                android:transitionName="@string/transition_city"
+                android:layout_gravity="center_vertical|center_horizontal"/>
+
+        </FrameLayout>
+    </android.support.v7.widget.CardView>
+

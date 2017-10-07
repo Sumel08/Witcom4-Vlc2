@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/swipe_layout">
+
+    <ImageView
+        android:layout_width="@dimen/size_swipe_toast"
+        android:layout_height="@dimen/size_swipe_toast"
+        android:tint="@color/colorAccent"
+        android:src="@drawable/left"
+        android:layout_gravity="center|left"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SWIPE"
+        android:textSize="50sp"
+        android:textColor="@color/custWhite"
+        android:layout_gravity="center"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"/>
+
+    <ImageView
+        android:layout_width="@dimen/size_swipe_toast"
+        android:layout_height="@dimen/size_swipe_toast"
+        android:tint="@color/colorAccent"
+        android:src="@drawable/right"
+        android:layout_gravity="center|right"/>
+
+</LinearLayout>

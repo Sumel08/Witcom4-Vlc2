@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- START xml_defaults -->
+<defaultsMap>
+    <entry>
+        <key>url_witcom</key>
+        <value>http://www.sum08.omniversoft.com/witcom</value>
+    </entry>
+    <entry>
+        <key>url_witcom_4</key>
+        <value>http://www.sum08.omniversoft.com/witcom4</value>
+    </entry>
+    <entry>
+        <key>data_version</key>
+        <value>1</value>
+    </entry>
+    <entry>
+        <key>url_streaming</key>
+        <value>rtmp://148.204.86.75:1935/envivo.upiita/livestream</value>
+    </entry>
+    <entry>
+        <key>url_streaming_lq</key>
+        <value>rtmp://148.204.86.75:1935/envivo.upiita.lq/livestream</value>
+    </entry>
+</defaultsMap>
+    <!-- END xml_defaults -->
