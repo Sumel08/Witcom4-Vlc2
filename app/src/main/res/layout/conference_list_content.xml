@@ -11,25 +11,23 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/conference_type"
+            style="@style/ListItemText"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
-            android:id="@+id/conference_type"
             android:textStyle="bold"
-            android:textAppearance="?attr/textAppearanceListItem"/>
+            android:textColor="@color/colorAccent"/>
 
         <TextView
             android:id="@+id/time"
+            style="@style/ListItemText"
             android:text="time"
             android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
+            android:textColor="@color/textAccent"
             android:paddingEnd="5dp"
-            android:transitionName="@string/transition_conference"
-            android:textAppearance="?attr/textAppearanceListItem"/>
+            android:transitionName="@string/transition_conference"/>
 
     </RelativeLayout>
 
@@ -40,11 +38,11 @@
 
         <TextView
             android:id="@+id/content"
+            style="@style/ListItemText"
             android:text="content"
             android:gravity="center_vertical"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceListItem" />
+            android:textColor="@color/colorPrimaryDark"/>
 
         <ImageView
             android:layout_width="70dp"

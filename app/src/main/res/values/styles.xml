@@ -33,4 +33,26 @@
         <item name="android:windowBackground">@color/rate_color</item>
     </style>
 
+    <style name="LargeText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_h2</item>
+    </style>
+    <style name="TextLargeAccent" parent="LargeText" >
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+    <style name="TextLargeBlue" parent="LargeText">
+        <item name="android:textColor">@color/textAccent</item>
+    </style>
+    <style name="TextLargeDark" parent="LargeText">
+        <item name="android:textSize">@dimen/text_size_h2</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="ListItemText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textAppearance">?attr/textAppearanceListItem</item>
+    </style>
+
 </resources>

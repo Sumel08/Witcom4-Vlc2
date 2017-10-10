@@ -26,4 +26,13 @@
     <dimen name="ic_album_overflow_width">20dp</dimen>
     <dimen name="ic_album_overflow_height">30dp</dimen>
     <dimen name="ic_album_overflow_margin_top">10dp</dimen>
+
+
+    <!-- Dimensiones para el texto -->
+    <dimen name="text_size_h1">24sp</dimen>
+    <dimen name="text_size_h2">21sp</dimen>
+    <dimen name="text_size_h3">18sp</dimen>
+    <dimen name="text_size_h4">15sp</dimen>
+    <dimen name="text_size_h5">12sp</dimen>
+    <dimen name="text_size_h6">10sp</dimen>
 </resources>
