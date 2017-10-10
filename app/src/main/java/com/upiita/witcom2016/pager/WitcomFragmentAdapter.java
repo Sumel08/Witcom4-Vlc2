@@ -26,6 +26,7 @@ import com.upiita.witcom2016.sketch.WitcomSketchActivity;
 import com.upiita.witcom2016.speaker.WitcomSpeakerActivity;
 import com.upiita.witcom2016.streaming.StreamingActivity;
 import com.upiita.witcom2016.tourism.WitcomTourismActivity;
+import com.upiita.witcom2016.util.UtilApp;
 import com.upiita.witcom2016.workshop.WitcomWorkshopActivity;
 import com.viewpagerindicator.IconPagerAdapter;
 
@@ -118,45 +119,47 @@ public class WitcomFragmentAdapter extends FragmentPagerAdapter implements IconP
             TextView textView = (TextView) rootView.findViewById(R.id.pager_section_label);
             ImageView imgV = (ImageView)rootView.findViewById(R.id.pager_image_section);
 
+            String title = "";
 
-            if(getArguments().getInt(ARG_SECTION_NUMBER)==1) {
-                textView.setText(Html.fromHtml("<font color="+accent+">{ </font><font color="+textWhite+">"+ getContext().getString(R.string.stream) +"</font><font color="+accent+"> }</font>"));
-                imgV.setImageDrawable(getResources().getDrawable(R.drawable.streaming));
-            }
-            else if(getArguments().getInt(ARG_SECTION_NUMBER)==2) {
-                textView.setText(Html.fromHtml("<font color=" + accent + ">{ </font><font color=" + textWhite + ">" + getContext().getString(R.string.conferences) + "</font><font color=" + accent + "> }</font>"));
-                imgV.setImageDrawable(getResources().getDrawable(R.drawable.conference));
-            }
-            else if(getArguments().getInt(ARG_SECTION_NUMBER)==3) {
-                textView.setText(Html.fromHtml("<font color="+accent+">{ </font><font color="+textWhite+">" + getString(R.string.speakers) + "</font><font color="+accent+"> }</font>"));
-                imgV.setImageDrawable(getResources().getDrawable(R.drawable.speaker));
-            }
-            else if(getArguments().getInt(ARG_SECTION_NUMBER)==4) {
-                textView.setText(Html.fromHtml("<font color="+accent+">{ </font><font color="+textWhite+">" + getString(R.string.workshops) + "</font><font color="+accent+"> }</font>"));
-                imgV.setImageDrawable(getResources().getDrawable(R.drawable.workshop));
-            }
-            else if(getArguments().getInt(ARG_SECTION_NUMBER)==5) {
-                textView.setText(Html.fromHtml("<font color="+accent+">{ </font><font color="+textWhite+">" + getString(R.string.how_to_arrive) + "</font><font color="+accent+"> }</font>"));
-                imgV.setImageDrawable(getResources().getDrawable(R.drawable.map));
-            }
-            else if(getArguments().getInt(ARG_SECTION_NUMBER)==6) {
-                textView.setText(Html.fromHtml("<font color="+accent+">{ </font><font color="+textWhite+">" + getString(R.string.sketch) + "</font><font color="+accent+"> }</font>"));
-                imgV.setImageDrawable(getResources().getDrawable(R.drawable.sketch));
-            }
-            else if(getArguments().getInt(ARG_SECTION_NUMBER)==7) {
-                textView.setText(Html.fromHtml("<font color="+accent+">{ </font><font color="+textWhite+">" + getString(R.string.tourism) + "</font><font color="+accent+"> }</font>"));
-                imgV.setImageDrawable(getResources().getDrawable(R.drawable.tourism));
-            }
-            else if(getArguments().getInt(ARG_SECTION_NUMBER)==8) {
-                textView.setText(Html.fromHtml("<font color="+accent+">{ </font><font color="+textWhite+">" + getString(R.string.sponsor) + "</font><font color="+accent+"> }</font>"));
-                imgV.setImageDrawable(getResources().getDrawable(R.drawable.sponsors));
+            switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
+                case 1:
+                    title = getContext().getString(R.string.stream);
+                    imgV.setImageResource(R.drawable.streaming);
+                    break;
+                case  2:
+                    title = getContext().getString(R.string.conferences);
+                    imgV.setImageResource(R.drawable.conference);
+                    break;
+                case 3:
+                    title = getString(R.string.speakers);
+                    imgV.setImageResource(R.drawable.speaker);
+                    break;
+                case 4:
+                    title = getString(R.string.workshops);
+                    imgV.setImageResource(R.drawable.workshop);
+                    break;
+                case 5:
+                    title = getString(R.string.how_to_arrive);
+                    imgV.setImageResource(R.drawable.map);
+                    break;
+                case 6:
+                    title = getString(R.string.sketch);
+                    imgV.setImageResource(R.drawable.sketch);
+                    break;
+                case 7:
+                    title = getString(R.string.tourism);
+                    imgV.setImageResource(R.drawable.tourism);
+                    break;
+                case 8:
+                    title = getString(R.string.sponsor);
+                    imgV.setImageResource(R.drawable.sponsors);
+                    break;
             }
 
-
+            UtilApp.betweenAccents(getContext(), title, "{", "}", textView);
             imgV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
 
                     ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), rootView.findViewById(R.id.pager_image_section), getString(R.string.transition_pager));
 

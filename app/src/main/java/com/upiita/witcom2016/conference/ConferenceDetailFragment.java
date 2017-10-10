@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.upiita.witcom2016.R;
 import com.upiita.witcom2016.conference.dummy.DummyContent;
+import com.upiita.witcom2016.util.UtilApp;
 
 import static com.upiita.witcom2016.pager.WitcomBaseActivity.accent;
 import static com.upiita.witcom2016.pager.WitcomBaseActivity.blue;
@@ -67,25 +68,17 @@ public class ConferenceDetailFragment extends Fragment {
 
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
-            ((TextView)rootView.findViewById(R.id.date)).setText(Html.fromHtml( "<font color="+accent+">&lt;Date </font>" +
-                    "<font color="+dark+">"+mItem.date+"</font>"+
-                    "<font color="+accent+"> /&gt;</font>"));
+            UtilApp.betweenAccents(getContext(), mItem.date, "<", ">", (TextView)rootView.findViewById(R.id.date));
 
-            ((TextView)rootView.findViewById(R.id.type)).setText(Html.fromHtml("<font color="+blue+">&lt;"+mItem.type+"&gt;</font>"));
+            ((TextView)rootView.findViewById(R.id.type)).setText("<" + mItem.type + ">");
 
-            ((TextView)rootView.findViewById(R.id.title)).setText(Html.fromHtml("<font color="+accent+">&lt;" + getString(R.string.title) + " </font>" +
-                    "<font color="+dark+">"+mItem.title+"</font>"+
-                    "<font color="+accent+"> /&gt;</font>"));
-            ((TextView)rootView.findViewById(R.id.auth)).setText(Html.fromHtml("<font color="+accent+">&lt;" + getString(R.string.author) + " </font>" +
-                    "<font color="+dark+">"+mItem.speaker+"</font>"+
-                    "<font color="+accent+"> /&gt;</font>"));
-            ((TextView)rootView.findViewById(R.id.from)).setText(Html.fromHtml("<font color="+accent+">&lt;" + getString(R.string.from) + " </font>" +
-                    "<font color="+dark+">"+mItem.from+"</font>"+
-                    "<font color="+accent+"> /&gt;</font>"));
-            ((TextView)rootView.findViewById(R.id.about)).setText(Html.fromHtml("<font color="+accent+">&lt;" + getString(R.string.about_details) + "&gt;</font>"));
-            ((TextView) rootView.findViewById(R.id.content)).setText(Html.fromHtml("<font color="+dark+">"+mItem.about+"</font>"));
-            ((TextView)rootView.findViewById(R.id.aboutEnd)).setText(Html.fromHtml("<font color="+accent+">&lt;/" + getString(R.string.about_details) + "&gt;</font>"));
-            ((TextView)rootView.findViewById(R.id.typeEnd)).setText(Html.fromHtml("<font color="+blue+">&lt;/"+mItem.type+"&gt;</font>"));
+            UtilApp.betweenAccents(getContext(), mItem.title, "<", ">", (TextView)rootView.findViewById(R.id.title));
+            UtilApp.betweenAccents(getContext(), mItem.speaker, "<", ">", (TextView)rootView.findViewById(R.id.auth));
+            UtilApp.betweenAccents(getContext(), mItem.from, "<", ">", (TextView)rootView.findViewById(R.id.from));
+            ((TextView)rootView.findViewById(R.id.about)).setText("<" + getString(R.string.about_details) + ">");
+            ((TextView) rootView.findViewById(R.id.content)).setText(mItem.about);
+            ((TextView)rootView.findViewById(R.id.aboutEnd)).setText("<" + getString(R.string.about_details) + ">");
+            ((TextView)rootView.findViewById(R.id.typeEnd)).setText("<" + mItem.type+"Z");
         }
 
         return rootView;

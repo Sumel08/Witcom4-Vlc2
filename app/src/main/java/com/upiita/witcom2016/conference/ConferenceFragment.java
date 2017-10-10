@@ -82,9 +82,9 @@ public class ConferenceFragment extends Fragment {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            holder.mTypeView.setText(Html.fromHtml("<font color = "+ accent+">"+mValues.get(position).type+": </font>"));
-            holder.mContentView.setText(Html.fromHtml("<font color = "+ dark +">"+mValues.get(position).title+"</font>"));
-            holder.mTimeView.setText(Html.fromHtml("<font color ="+ blue+">"+mValues.get(position).time+"</font>"));
+            holder.mTypeView.setText(holder.mItem.type);
+            holder.mContentView.setText(holder.mItem.title);
+            holder.mTimeView.setText(holder.mItem.time);
 
             SQLiteDatabase bd = new WitcomDataBase(getContext()).getReadableDatabase();
             Cursor fila = bd.rawQuery("SELECT image FROM images WHERE id = '" + holder.mItem.image + "'", null);
