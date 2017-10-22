@@ -147,6 +147,12 @@ public class WitcomDataBase extends SQLiteOpenHelper {
             "event    TEXT" +
             ");";
 
+    public static final String SKETCH_TABLE = "CREATE TABLE sketch (" +
+            "id         TEXT," +
+            "image_url         TEXT," +
+            "description         TEXT" +
+            ");";
+
     /*public static final String CONFERENCES_TABLE = "CREATE TABLE conferences (" +
             "id         TEXT," +
             "title      TEXT," +
@@ -224,6 +230,7 @@ public class WitcomDataBase extends SQLiteOpenHelper {
         db.execSQL(SPONSORS_TABLE);
         db.execSQL(STREAMS_TABLE);
         db.execSQL(VERSION_TABLE);
+        db.execSQL(SKETCH_TABLE);
 
     }
 

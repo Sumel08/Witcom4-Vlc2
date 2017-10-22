@@ -56,6 +56,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import static com.upiita.witcom2016.WitcomLogoActivity.IMAGE_DEFAULT;
 import static com.upiita.witcom2016.WitcomLogoActivity.URL_BASE;
@@ -370,9 +371,9 @@ public class EventActivity extends AppCompatActivity {
             getURLS.put("place_social_networks", "/placeSocialNetworks/getPlaceSocialNetworks/");
             getURLS.put("schedule", "/schedule/getSchedule/");
             getURLS.put("social_networks", "/socialNetworks/getSocialNetworks/");
-            getURLS.put("sponsors", "/sponsors/getSponsors/");
-            getURLS.put("streams", "/streams/getStreams/");
-            //getURLS.put("place_category", "/placeCategory/getPlaceCategories/");
+            getURLS.put("sponsors", Constants.GET_SPONSOR);
+            getURLS.put("streams", Constants.GET_STREAM);
+            getURLS.put("sketch", Constants.GET_SKETCH);
 
 
             SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
@@ -468,7 +469,15 @@ public class EventActivity extends AppCompatActivity {
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject object = response.getJSONObject(i);
                             progressDia.setMax(progressDia.getMax()+1);
-                            getImage(object.getString("id"), object.getString("image"));
+
+                            new GetImage(progressDia).execute(object.getString("id"), object.getString("image"));
+
+                            //getImage(object.getString("id"), object.getString("image"));
+                            /*progressDia.setProgress(progressDia.getProgress()+1);
+                            if (progressDia.getProgress() == progressDia.getMax()) {
+                                progressDia.dismiss();
+                                startEvent();
+                            }*/
                         }
 
                     } catch (JSONException e) {
@@ -499,6 +508,7 @@ public class EventActivity extends AppCompatActivity {
 
         private void getImage (final String id, final String url) {
             Log.d("LEMUS IMAGE URL", url);
+
             ImageRequest request = new ImageRequest(url,
                     new Response.Listener<Bitmap>() {
                         @Override
@@ -508,20 +518,22 @@ public class EventActivity extends AppCompatActivity {
                             bitmap.compress(Bitmap.CompressFormat.PNG, 90, baos);
                             byte[] b = baos.toByteArray();
 
-                            SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getWritableDatabase();
+                            /*SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getWritableDatabase();
 
                             ContentValues values = new ContentValues();
                             values.put("id", id);
                             values.put("image", b);
                             db.insert("images", null, values);
-                            db.close();
+                            db.close();*/
                             progressDia.setProgress(progressDia.getProgress()+1);
                             if (progressDia.getProgress() == progressDia.getMax()) {
                                 progressDia.dismiss();
                                 startEvent();
                             }
                         }
-                    }, 0, 0, null,
+                    }, 0, 0,
+                    ImageView.ScaleType.FIT_CENTER,
+                    Bitmap.Config.RGB_565,
                     new Response.ErrorListener() {
                         public void onErrorResponse(VolleyError error) {
                             Log.d("LEMUS IMAGEERROR", error.toString());
@@ -555,5 +567,85 @@ public class EventActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         finish();
+    }
+
+    private class GetImage extends AsyncTask<String, Void, String> {
+
+        private ProgressDialog progressDia;
+
+        public GetImage(ProgressDialog progressDia) {
+            this.progressDia = progressDia;
+        }
+
+        @Override
+        protected String doInBackground(final String... params) {
+            Log.d("IMAGE PARAMS: ", params.toString());
+            Log.d("PARAMS LENGTH: ", String.valueOf(params.length));
+            Log.d("PARAM0", params[0]);
+            Log.d("PARAM1", params[1]);
+            /*try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }*/
+            /*progressDia.setProgress(progressDia.getProgress()+1);
+            if (progressDia.getProgress() == progressDia.getMax()) {
+                progressDia.dismiss();
+                startEvent();
+            }*/
+            ImageRequest request = new ImageRequest(params[1],
+                    new Response.Listener<Bitmap>() {
+                        @Override
+                        public void onResponse(Bitmap bitmap) {
+
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 90, baos);
+                            byte[] b = baos.toByteArray();
+
+                            SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getWritableDatabase();
+
+                            ContentValues values = new ContentValues();
+                            values.put("id", params[0]);
+                            values.put("image", b);
+                            db.insert("images", null, values);
+                            db.close();
+                            progressDia.setProgress(progressDia.getProgress()+1);
+                            if (progressDia.getProgress() == progressDia.getMax()) {
+                                progressDia.dismiss();
+                                startEvent();
+                            }
+                        }
+                    }, 0, 0, null,
+                    new Response.ErrorListener() {
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("LEMUS IMAGEERROR", error.toString());
+                            Log.d("LEMUS IMAGEERROR", params[1]);
+                            progressDia.setProgress(progressDia.getProgress()+1);
+                            if (progressDia.getProgress() == progressDia.getMax()) {
+                                progressDia.dismiss();
+                                startEvent();
+                            }
+                        }
+                    });
+            Controller.getInstance().addToRequestQueue(request);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+        }
+
+        private void startEvent() {
+            Intent intent = new Intent(EventActivity.this, WitcomLogoActivity.class);
+            startActivity(intent);
+        }
     }
 }

@@ -28,14 +28,19 @@ public class WitcomSketchActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         SQLiteDatabase bd = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
-        Cursor fila = bd.rawQuery("SELECT image FROM images WHERE id = 'SKETCH'", null);
-        if (fila.moveToFirst()) {
-            do {
-                ((ImageView) findViewById(R.id.sketch_view)).setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(fila.getBlob(0))));
-            } while (fila.moveToNext());
+
+        Cursor sketchCursor = bd.rawQuery("SELECT * FROM sketch", null);
+
+        if (sketchCursor.moveToFirst()) {
+            Cursor imageCursor = bd.rawQuery("SELECT image FROM images WHERE id = " + sketchCursor.getString(1), null);
+            if (imageCursor.moveToFirst()) {
+                ((ImageView) findViewById(R.id.sketch_view)).setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(imageCursor.getBlob(0))));
+            }
+
+            imageCursor.close();
         }
 
-        fila.close();
+        sketchCursor.close();
         bd.close();
     }
 

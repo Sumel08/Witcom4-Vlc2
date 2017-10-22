@@ -16,4 +16,7 @@ public class Constants {
     public static String GET_PLACE = "/witcom2017/place.json";
     public static String GET_PLACE_CATEGORY = "/witcom2017/placeCategory.json";
     public static String GET_IMAGES = "/witcom2017/image.json";
+    public static String GET_SKETCH = "/witcom2017/sketch.json";
+    public static String GET_SPONSOR = "/witcom2017/sponsor.json";
+    public static String GET_STREAM = "/witcom2017/stream.json";
 }
