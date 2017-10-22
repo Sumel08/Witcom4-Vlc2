@@ -92,12 +92,35 @@ public class WitcomSpeakerActivity extends AppCompatActivity {
         List<Speaker> items = new ArrayList<>();
 
         SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
-        Cursor fila = db.rawQuery("SELECT * FROM conferences", null);
-        if (fila.moveToFirst()) {
+
+        /*OBTENEMOS TODAS LAS CONFERENCIAS, DE AHÍ A LOS PONENTES*/
+
+        Cursor activityPeopleCursor = db.rawQuery("SELECT * FROM activity_people", null);
+
+        if (activityPeopleCursor.moveToFirst()) {
             do {
-                items.add(new Speaker(fila.getString(6), fila.getString(2), fila.getString(3), fila.getString(1)));
-            } while (fila.moveToNext());
+                Cursor personCursor = db.rawQuery("SELECT * FROM people where id = " + activityPeopleCursor.getString(2), null);
+                if (personCursor.moveToFirst()) {
+                    Cursor activityCursor = db.rawQuery("SELECT * FROM activity where id = " + activityPeopleCursor.getString(1), null);
+
+                    if (activityCursor.moveToFirst()) {
+                        items.add(new Speaker(
+                                personCursor.getString(4),
+                                personCursor.getString(1),
+                                personCursor.getString(8),
+                                activityCursor.getString(1),
+                                personCursor.getString(2),
+                                personCursor.getString(3),
+                                personCursor.getString(4),
+                                personCursor.getString(5),
+                                personCursor.getString(6),
+                                personCursor.getString(7),
+                                personCursor.getString(8) ));
+                    }
+                }
+            } while (activityPeopleCursor.moveToNext());
         }
+
         db.close();
 
         adapter = new SpeakerAdapter(items, getApplicationContext());
@@ -203,7 +226,7 @@ public class WitcomSpeakerActivity extends AppCompatActivity {
         public void onBindViewHolder(final SpeakerViewHolder viewHolder, int i) {
 
             SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
-            Cursor fila = db.rawQuery("SELECT * FROM images WHERE id = '" + items.get(i).getImage() + "'", null);
+            Cursor fila = db.rawQuery("SELECT * FROM images WHERE id = '" + items.get(i).getPhoto() + "'", null);
             if (fila.moveToFirst()) {
                 do {
                     viewHolder.image.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(fila.getBlob(1))));
@@ -214,7 +237,7 @@ public class WitcomSpeakerActivity extends AppCompatActivity {
             db.close();
 
             viewHolder.name.setText(items.get(i).getName());
-            viewHolder.from.setText(items.get(i).getFrom());
+            viewHolder.from.setText(items.get(i).getConference());
             viewHolder.speaker = items.get(i);
 
             viewHolder.mView.findViewById(R.id.speaker_card_card).setOnClickListener(new View.OnClickListener() {

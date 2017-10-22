@@ -120,13 +120,13 @@ public class PlaceDetailActivity extends AppCompatActivity {
         }
 
         ImageView iv = (ImageView) findViewById(R.id.place_detail_image);
-        SQLiteDatabase bd = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
+        /*SQLiteDatabase bd = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
         Cursor fila = bd.rawQuery("SELECT image FROM images WHERE id = '" + PlaceContent.ITEM_MAP.get(getIntent().getStringExtra(PlaceDetailFragment.ARG_ITEM_ID)).id_image +"'", null);
         if (fila.moveToFirst()) {
             iv.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(fila.getBlob(0))));
         }
         fila.close();
-        bd.close();
+        bd.close();*/
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity

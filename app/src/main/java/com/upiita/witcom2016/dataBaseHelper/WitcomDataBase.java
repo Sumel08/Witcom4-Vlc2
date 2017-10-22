@@ -20,9 +20,9 @@ public class WitcomDataBase extends SQLiteOpenHelper {
             "description    TEXT," +
             "notes    TEXT," +
             "price    TEXT," +
-            "beginDate    TEXT," +
-            "endDate    TEXT," +
-            "activityType    TEXT," +
+            "start_date    TEXT," +
+            "end_date    TEXT," +
+            "activity_type    TEXT," +
             "place    TEXT," +
             "schedule    TEXT" +
             ");";
@@ -30,40 +30,41 @@ public class WitcomDataBase extends SQLiteOpenHelper {
     public static final String ACTIVITY_PEOPLE_TABLE = "CREATE TABLE activity_people (" +
             "id         TEXT," +
             "activity   TEXT," +
-            "people    TEXT" +
+            "person    TEXT" +
             ");";
 
     public static final String ACTIVITY_TYPE_TABLE = "CREATE TABLE activity_type (" +
             "id         TEXT," +
             "name   TEXT," +
             "description   TEXT," +
-            "dateCreated   TEXT," +
+            "created   TEXT," +
+            "show_in_app   TEXT," +
+            "image   TEXT," +
             "event    TEXT" +
             ");";
 
     public static final String CHAIRS_TABLE = "CREATE TABLE chairs (" +
             "id         TEXT," +
             "event   TEXT," +
-            "people    TEXT" +
+            "person    TEXT" +
             ");";
 
     public static final String DEVELOPERS_TABLE = "CREATE TABLE developers (" +
             "id         TEXT," +
             "event   TEXT," +
-            "people    TEXT" +
+            "person    TEXT" +
             ");";
 
     public static final String EVENT_TABLE = "CREATE TABLE event (" +
             "id         TEXT," +
             "code   TEXT," +
             "description   TEXT," +
-            "endDate    TEXT," +
-            "eventImage    TEXT," +
+            "end_date    TEXT," +
+            "event_image    TEXT," +
             "name    TEXT," +
             "place    TEXT," +
             "schedule    TEXT," +
-            "sketch    TEXT," +
-            "startDate    TEXT" +
+            "start_date    TEXT" +
             ");";
 
     public static final String IMAGES_TABLE = "CREATE TABLE images (" +
@@ -80,64 +81,70 @@ public class WitcomDataBase extends SQLiteOpenHelper {
             "resume      TEXT," +
             "email         TEXT," +
             "phone      TEXT," +
-            "provenance     TEXT" +
+            "provenance      TEXT," +
+            "event     TEXT" +
             ")";
 
     public static final String PEOPLE_SOCIAL_NETWORKS_TABLE = "CREATE TABLE people_social_networks (" +
             "id         TEXT," +
-            "people   TEXT," +
-            "socialNetworks    TEXT" +
+            "person   TEXT," +
+            "social_network    TEXT" +
             ");";
 
     public static final String PLACE_TABLE = "CREATE TABLE place (" +
             "id            TEXT," +
-            "placeName       TEXT," +
+            "name       TEXT," +
             "description         TEXT," +
             "longitude   TEXT," +
             "latitude       TEXT," +
             "altitude      TEXT," +
             "indication         TEXT," +
-            "additionalInfo      TEXT," +
+            "additional_info      TEXT," +
             "website     TEXT," +
             "email      TEXT," +
             "telephone          TEXT," +
             "image     TEXT," +
-            "placeCategory       TEXT" +
+            "place_category       TEXT" +
             ")";
 
     public static final String PLACE_CATEGORY_TABLE = "CREATE TABLE place_category (" +
             "id         TEXT," +
-            "category   TEXT," +
-            "description    TEXT" +
+            "name   TEXT," +
+            "description   TEXT," +
+            "show_in_app   TEXT," +
+            "event    TEXT" +
             ");";
 
     public static final String PLACE_SOCIAL_NETWORKS_TABLE = "CREATE TABLE place_social_networks (" +
             "id         TEXT," +
             "place   TEXT," +
-            "socialNetworks    TEXT" +
+            "social_network    TEXT" +
             ");";
 
     public static final String SCHEDULE_TABLE = "CREATE TABLE schedule (" +
             "id         TEXT," +
-            "dateCreated    TEXT" +
+            "created_on    TEXT," +
+            "event    TEXT" +
             ");";
 
     public static final String SOCIAL_NETWORKS_TABLE = "CREATE TABLE social_networks (" +
             "id         TEXT," +
             "url         TEXT," +
-            "type    TEXT" +
+            "domain        TEXT," +
+            "event    TEXT" +
             ");";
 
     public static final String SPONSORS_TABLE = "CREATE TABLE sponsors (" +
             "id         TEXT," +
-            "evento         TEXT," +
-            "people    TEXT" +
+            "event         TEXT," +
+            "person    TEXT" +
             ");";
 
     public static final String STREAMS_TABLE = "CREATE TABLE streams (" +
             "id         TEXT," +
             "url         TEXT," +
-            "description    TEXT" +
+            "description         TEXT," +
+            "event    TEXT" +
             ");";
 
     /*public static final String CONFERENCES_TABLE = "CREATE TABLE conferences (" +

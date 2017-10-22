@@ -139,11 +139,12 @@ public class WitcomProgramActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             SQLiteDatabase bd = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
-            Cursor fila = bd.rawQuery("SELECT date FROM schedule", null);
+            Cursor fila = bd.rawQuery("SELECT start_date FROM activity", null);
 
             if (fila.moveToFirst()) {
                 do {
-                    dates.add(fila.getString(0));
+                    String[] aux_date = fila.getString(0).split("T");
+                    dates.add(aux_date[0]);
                 } while (fila.moveToNext());
 
             }
@@ -157,14 +158,14 @@ public class WitcomProgramActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
 
             String[] date = getPos(dates, position).split("-");
-            date[2] = "20" + date[2];
+            //date[2] = "20" + date[2];
             String weekDay;
             SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", getResources().getConfiguration().locale);
 
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]));
+            calendar.set(Integer.parseInt(date[0]), Integer.parseInt(date[1])-1, Integer.parseInt(date[2]));
 
-            weekDay = dayFormat.format(calendar.getTime()) + " " + date[0];
+            weekDay = dayFormat.format(calendar.getTime()) + " " + date[2];
 
             return weekDay;
         }

@@ -22,7 +22,7 @@ import java.io.ByteArrayInputStream;
 
 public class WitcomLogoActivity extends AppCompatActivity {
 
-    public static String URL_BASE = "http://192.168.0.10:8080";
+    public static String URL_BASE = "https://host-test-b1ab8.firebaseapp.com";
     public static String CONTENT_VERSION = "0";
     public static String URL_STREAM = "rtmp://148.204.86.75:1935/envivo.upiita/livestream";
     public static String URL_STREAM_LQ = "rtmp://148.204.86.75:1935/envivo.upiita.lq/livestream";

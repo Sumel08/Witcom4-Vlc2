@@ -26,7 +26,7 @@ public class EventsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events);
 
-        JsonArrayRequest request = new JsonArrayRequest("http://192.168.0.4:8080/event/getEvents", new Response.Listener<JSONArray>() {
+        JsonArrayRequest request = new JsonArrayRequest(WitcomLogoActivity.URL_BASE + Constants.GET_EVENTS, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getWritableDatabase();

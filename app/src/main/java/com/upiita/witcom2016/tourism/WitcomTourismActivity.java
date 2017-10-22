@@ -53,10 +53,10 @@ public class WitcomTourismActivity extends AppCompatActivity {
         final ArrayList<City> cities = new ArrayList<>();
 
         SQLiteDatabase bd = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
-        Cursor fila = bd.rawQuery("SELECT * FROM cities", null);
+        Cursor fila = bd.rawQuery("SELECT * FROM place_category where show_in_app = 'true'", null);
         if (fila.moveToFirst()) {
             do {
-                cities.add(new City(fila.getString(1), fila.getString(2)));
+                cities.add(new City(fila.getInt(0), fila.getString(1), fila.getString(0)));
             } while (fila.moveToNext());
         }
 
@@ -140,7 +140,7 @@ public class WitcomTourismActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Bundle extras = new Bundle();
-                    extras.putInt("city_id", position+1);
+                    extras.putInt("city_id", cities.get(position).getId());
                     extras.putString("city_name", cities.get(position).getCity());
                     Intent mapIntent = new Intent(WitcomTourismActivity.this, PlaceListActivity.class);
                     mapIntent.putExtras(extras);

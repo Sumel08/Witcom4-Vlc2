@@ -49,25 +49,23 @@ public class PlaceContent {
         }*/
 
         SQLiteDatabase bd = new WitcomDataBase(context).getReadableDatabase();
-        Cursor fila = bd.rawQuery("SELECT * FROM places", null);
+        Cursor fila = bd.rawQuery("SELECT * FROM place where place_category = " + city, null);
         if (fila.moveToFirst()) {
             do {
-                if (city == fila.getInt(1)) {
-                    addItem(new PlaceItem(String.valueOf(fila.getInt(0)),
-                            fila.getString(2),
-                            fila.getString(3),
-                            fila.getString(2),
-                            fila.getString(3),
-                            fila.getString(4),
-                            fila.getString(5),
-                            fila.getString(6),
-                            fila.getDouble(7),
-                            fila.getDouble(8),
-                            fila.getString(9),
-                            fila.getString(10),
-                            fila.getString(11),
-                            fila.getString(12)));
-                }
+                addItem(new PlaceItem(String.valueOf(fila.getInt(0)),
+                        fila.getString(1),
+                        fila.getString(2),
+                        fila.getString(1),
+                        fila.getString(2),
+                        fila.getString(4),
+                        fila.getString(5),
+                        fila.getString(6),
+                        fila.getDouble(4),
+                        fila.getDouble(3),
+                        fila.getString(11),
+                        fila.getString(10),
+                        fila.getString(10),
+                        fila.getString(8)));
             } while (fila.moveToNext());
         }
 

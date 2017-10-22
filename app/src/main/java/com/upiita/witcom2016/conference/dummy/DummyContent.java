@@ -33,35 +33,45 @@ public class DummyContent {
     public DummyContent (Context context) {
         SQLiteDatabase bd = new WitcomDataBase(context).getReadableDatabase();
 
-        String id = "", title = "", speaker = "", from = "", about = "", date = "", time = "", type = "", image = "";
-        Cursor fila = bd.rawQuery("SELECT * FROM schedule", null);
+        String id = "", title = "", from = "", about = "", date = "", end_date = "", time = "", end_time = "", type = "", image = "";
+        ArrayList<String> speaker = new ArrayList<>();
+        Cursor fila = bd.rawQuery("SELECT * FROM activity", null);
 
         if (fila.moveToFirst()) {
 
             do {
                 id = fila.getString(0);
-                date = fila.getString(2);
-                time = fila.getString(3);
+                title = fila.getString(1);
+                String[] datetime_aux = fila.getString(6).split("T");
+                date = datetime_aux[0];
+                time = datetime_aux[1].replace("Z", "");
+                String[] end_datetime_aux = fila.getString(7).split("T");
+                end_date = end_datetime_aux[0];
+                end_time = end_datetime_aux[1].replace("Z", "");
+                about = fila.getString(3);
+                speaker = new ArrayList<>();
 
-                Cursor fila2 = bd.rawQuery("SELECT * FROM activities WHERE id = " + fila.getInt(1), null);
+                Cursor fila2 = bd.rawQuery("SELECT * FROM activity_type WHERE id = " + fila.getInt(8), null);
 
                 if (fila2.moveToFirst()) {
-                    image = fila2.getString(2);
+                    image = fila2.getString(5);
                     type = fila2.getString(1);
                 }
 
-                Cursor fila3 = bd.rawQuery("SELECT * FROM " + fila2.getString(3) + " WHERE id = " + fila.getInt(4), null);
+                Cursor fila3 = bd.rawQuery("SELECT * FROM activity_people WHERE activity = " + fila.getInt(0), null);
 
                 if (fila3.moveToFirst()) {
-                    title = fila3.getString(1);
-                    speaker = fila3.getString(2);
-                    from = fila3.getString(3);
-                    about = fila3.getString(4);
-                    if (fila2.getString(3).equals("conferences"))
-                        title = fila3.getString(5) + fila3.getString(1);
+
+                    do {
+                        Cursor fila4 = bd.rawQuery("SELECT * FROM people WHERE id = " + fila3.getInt(2), null);
+                        if (fila4.moveToFirst()) {
+                            speaker.add(fila4.getString(1) + " " + fila4.getString(2));
+                        }
+                    } while (fila3.moveToNext());
+
                 }
 
-                addItem(new DummyItem(id, title, speaker, from, about, date, time, type, image));
+                addItem(new DummyItem(id, title, speaker, from, about, date, end_date, time, end_time, type, image));
 
             }
             while (fila.moveToNext());
@@ -82,22 +92,26 @@ public class DummyContent {
     public static class DummyItem {
         public final String id;
         public final String title;
-        public final String speaker;
+        public final ArrayList<String> speaker;
         public final String from;
         public final String about;
         public final String date;
+        public final String end_date;
         public final String time;
+        public final String end_time;
         public final String type;
         public final String image;
 
-        public DummyItem(String id, String title, String speaker, String from, String about, String date, String time, String type, String image) {
+        public DummyItem(String id, String title, ArrayList<String> speaker, String from, String about, String date, String end_date, String time, String end_time ,String type, String image) {
             this.id = id;
             this.title = title;
             this.speaker = speaker;
             this.from = from;
             this.about = about;
             this.date = date;
+            this.end_date = end_date;
             this.time = time;
+            this.end_time = end_time;
             this.type = type;
             this.image = image;
         }

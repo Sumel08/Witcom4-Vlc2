@@ -38,6 +38,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.upiita.witcom2016.BuildConfig;
+import com.upiita.witcom2016.Constants;
 import com.upiita.witcom2016.R;
 import com.upiita.witcom2016.WitcomLogoActivity;
 import com.upiita.witcom2016.dataBaseHelper.Controller;
@@ -125,7 +126,7 @@ public class EventActivity extends AppCompatActivity {
 
         Controller.getInstance().addToRequestQueue(requestImage);
 
-        JsonArrayRequest request = new JsonArrayRequest(WitcomLogoActivity.URL_BASE + "/event/getEvents", new Response.Listener<JSONArray>() {
+        JsonArrayRequest request = new JsonArrayRequest(WitcomLogoActivity.URL_BASE + Constants.GET_EVENTS, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getWritableDatabase();
@@ -140,7 +141,7 @@ public class EventActivity extends AppCompatActivity {
                         } catch (JSONException e){
                             image = IMAGE_DEFAULT;
                         } finally {
-                            Event event = new Event(object.getString("name"), object.getString("code"), image, new Date(), new Date());
+                            Event event = new Event(object.getString("name"), object.getString("code"), object.getString("event_image_url"), new Date(), new Date());
 
                             eventList.add(event);
                         }
@@ -356,16 +357,16 @@ public class EventActivity extends AppCompatActivity {
             final HashMap<String, String> getURLS = new HashMap<>();
             ArrayList<String> columns;
 
-            getURLS.put("activity", "/activity/getActivities/");
-            getURLS.put("activity_people", "/activityPeople/getActivitiesPeople/");
-            getURLS.put("activity_type", "/activityType/getActivitiesType/");
-            getURLS.put("chairs", "/chairs/getChairs/");
-            getURLS.put("developers", "/developers/getDevelopers/");
-            getURLS.put("event", "/event/getEvent/");
-            getURLS.put("people", "/people/getPeople/");
+            getURLS.put("activity", Constants.GET_ACTIVITY);
+            getURLS.put("activity_people", Constants.GET_ACTIVITY_PEOPLE);
+            getURLS.put("activity_type", Constants.GET_ACTIVITY_TYPE);
+            getURLS.put("chairs", Constants.GET_CHAIR);
+            getURLS.put("developers", Constants.GET_DEVELOPER);
+            getURLS.put("event", Constants.GET_EVENT);
+            getURLS.put("people", Constants.GET_PEOPLE);
             getURLS.put("people_social_networks", "/peopleSocialNetworks/getPeopleSocialNetworks/");
-            getURLS.put("place_category", "/placeCategory/getPlaceCategories/");
-            getURLS.put("place", "/place/getPlaces/");
+            getURLS.put("place_category", Constants.GET_PLACE_CATEGORY);
+            getURLS.put("place", Constants.GET_PLACE);
             getURLS.put("place_social_networks", "/placeSocialNetworks/getPlaceSocialNetworks/");
             getURLS.put("schedule", "/schedule/getSchedule/");
             getURLS.put("social_networks", "/socialNetworks/getSocialNetworks/");
@@ -387,54 +388,6 @@ public class EventActivity extends AppCompatActivity {
             }
             db.close();
 
-
-            /* = new ArrayList<>();
-            columns.add("id");
-            columns.add("code");
-            columns.add("description");
-            columns.add("endDate");
-            columns.add("eventImage");
-            columns.add("name");
-            columns.add("place");
-            columns.add("schedule");
-            columns.add("sketch");
-            columns.add("startDate");
-            dataBase.put("event", columns);
-            getURLS.put("event", "/event/getEvent/");
-
-
-            columns = new ArrayList<>();
-            columns.add("id");
-            columns.add("placeName");
-            columns.add("description");
-            columns.add("longitude");
-            columns.add("latitude");
-            columns.add("altitude");
-            columns.add("indication");
-            columns.add("additionalInfo");
-            columns.add("website");
-            columns.add("email");
-            columns.add("telephone");
-            columns.add("image");
-            dataBase.put("place", columns);
-            getURLS.put("place", "/place/getPlaces/");
-
-
-            columns = new ArrayList<>();
-            columns.add("id");
-            columns.add("name");
-            columns.add("surname");
-            columns.add("birthdate");
-            columns.add("photo");
-            columns.add("resume");
-            columns.add("email");
-            columns.add("phone");
-            columns.add("provenance");
-            dataBase.put("people", columns);
-            getURLS.put("people", "/people/getPeople/");*/
-
-            //tvUpdate.setVisibility(View.INVISIBLE);
-
             SQLiteDatabase bd = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
             bd.execSQL("delete from version");
             bd = new WitcomDataBase(getApplicationContext()).getWritableDatabase();
@@ -452,7 +405,7 @@ public class EventActivity extends AppCompatActivity {
             getImages(eventCode);
 
             for (final String table: dataBase.keySet()) {
-                JsonArrayRequest request = new JsonArrayRequest(URL_BASE + getURLS.get(table) + eventCode, new Response.Listener<JSONArray>() {
+                JsonArrayRequest request = new JsonArrayRequest(URL_BASE + getURLS.get(table), new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getWritableDatabase();
@@ -462,7 +415,7 @@ public class EventActivity extends AppCompatActivity {
                             } catch (SQLiteException e) {
 
                             }
-                            Log.d("RESPONSE FOR " + table, response.toString());
+                            Log.d("LEMUS: " + table, response.toString());
                             for (int i = 0; i < response.length(); i++) {
                                 JSONObject object = response.getJSONObject(i);
                                 ContentValues values = new ContentValues();
@@ -479,7 +432,7 @@ public class EventActivity extends AppCompatActivity {
                             }
 
                         } catch (JSONException e) {
-                            Log.d("FATALERROR1", e.toString());
+                            Log.d("LEMUS(ERROR): " + table, e.toString());
                         } finally {
                             db.close();
                             progressDia.setProgress(progressDia.getProgress()+1);
@@ -492,7 +445,7 @@ public class EventActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("FATALERROR", error.toString());
+                        Log.d("LEMUS(ERROR2): " + table, error.toString());
                         progressDia.setProgress(progressDia.getProgress()+1);
                         if (progressDia.getProgress() == progressDia.getMax()) {
                             progressDia.dismiss();
@@ -506,7 +459,7 @@ public class EventActivity extends AppCompatActivity {
         }
 
         private void getImages (String eventCode) {
-            JsonArrayRequest request = new JsonArrayRequest(URL_BASE + "/images/getImages/" + eventCode, new Response.Listener<JSONArray>() {
+            JsonArrayRequest request = new JsonArrayRequest(URL_BASE + Constants.GET_IMAGES, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
                     SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getWritableDatabase();
@@ -515,11 +468,11 @@ public class EventActivity extends AppCompatActivity {
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject object = response.getJSONObject(i);
                             progressDia.setMax(progressDia.getMax()+1);
-                            getImage(object.getString("id"), URL_BASE + object.getString("url"));
+                            getImage(object.getString("id"), object.getString("image"));
                         }
 
                     } catch (JSONException e) {
-                        Log.d("FATALERROR1", e.toString());
+                        Log.d("LEMUS IMAGE ERROR", e.toString());
                     } finally {
                         db.close();
                         progressDia.setProgress(progressDia.getProgress()+1);
@@ -532,7 +485,7 @@ public class EventActivity extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.d("FATALERROR", error.toString());
+                    Log.d("LEMUS IMAGE ERROR2", error.toString());
                     progressDia.setProgress(progressDia.getProgress()+1);
                     if (progressDia.getProgress() == progressDia.getMax()) {
                         progressDia.dismiss();
@@ -544,7 +497,8 @@ public class EventActivity extends AppCompatActivity {
             Controller.getInstance().addToRequestQueue(request);
         }
 
-        private void getImage (final String id, String url) {
+        private void getImage (final String id, final String url) {
+            Log.d("LEMUS IMAGE URL", url);
             ImageRequest request = new ImageRequest(url,
                     new Response.Listener<Bitmap>() {
                         @Override
@@ -570,7 +524,8 @@ public class EventActivity extends AppCompatActivity {
                     }, 0, 0, null,
                     new Response.ErrorListener() {
                         public void onErrorResponse(VolleyError error) {
-                            Log.d("IMAGEERROR", "Algo salió mal");
+                            Log.d("LEMUS IMAGEERROR", error.toString());
+                            Log.d("LEMUS IMAGEERROR", url);
                             progressDia.setProgress(progressDia.getProgress()+1);
                             if (progressDia.getProgress() == progressDia.getMax()) {
                                 progressDia.dismiss();

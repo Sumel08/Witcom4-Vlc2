@@ -72,13 +72,18 @@ public class ConferenceDetailFragment extends Fragment {
 
             ((TextView)rootView.findViewById(R.id.type)).setText("<" + mItem.type + ">");
 
+            String speakers = "\n";
+            for (String speaker: mItem.speaker) {
+                speakers += "* " + speaker + '\n';
+            }
+
             UtilApp.betweenAccents(getContext(), mItem.title, "<", ">", (TextView)rootView.findViewById(R.id.title));
-            UtilApp.betweenAccents(getContext(), mItem.speaker, "<", ">", (TextView)rootView.findViewById(R.id.auth));
+            UtilApp.betweenAccents(getContext(), speakers, "<", ">", (TextView)rootView.findViewById(R.id.auth));
             UtilApp.betweenAccents(getContext(), mItem.from, "<", ">", (TextView)rootView.findViewById(R.id.from));
             ((TextView)rootView.findViewById(R.id.about)).setText("<" + getString(R.string.about_details) + ">");
             ((TextView) rootView.findViewById(R.id.content)).setText(mItem.about);
             ((TextView)rootView.findViewById(R.id.aboutEnd)).setText("<" + getString(R.string.about_details) + ">");
-            ((TextView)rootView.findViewById(R.id.typeEnd)).setText("<" + mItem.type+"Z");
+            ((TextView)rootView.findViewById(R.id.typeEnd)).setText("<" + mItem.type+">");
         }
 
         return rootView;
