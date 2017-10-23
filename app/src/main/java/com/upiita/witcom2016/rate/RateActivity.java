@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -93,15 +94,16 @@ public class RateActivity extends AppCompatActivity {
 
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat format = new SimpleDateFormat("EEEE, MMMM d, yyyy 'at' h:mm a", Locale.US);
+                String firebaseToken = FirebaseInstanceId.getInstance().getToken();
 
-                String android_id = format.format(calendar.getTime()) +
+                String android_id = firebaseToken +
                         "-" +
                         finalActivityName +
                         "-" +
                         getIntent().getStringExtra("conference") +
                         ".json";
                 StorageReference fileRef = storageRef.child(finalEventName).child(finalActivityTypeName).child(android_id);
-                String textFile = "{\"activity\": \"" + conference + "\", \"comment\": \"" + ((EditText) findViewById(R.id.rating_comment)).getText().toString() + "\", \"rate\": \"" + ((RatingBar) findViewById(R.id.rating_bar)).getRating() + "\" }";
+                String textFile = "{\"activity\": \"" + conference + "\", \"comment\": \"" + ((EditText) findViewById(R.id.rating_comment)).getText().toString() + "\", \"rate\": \"" + ((RatingBar) findViewById(R.id.rating_bar)).getRating() + "\", \"token\": \"" + firebaseToken + "\" }";
 
                 //String textFile = ((RatingBar) findViewById(R.id.rating_bar)).getRating() + "\n" + ((EditText) findViewById(R.id.rating_comment)).getText().toString();
 
