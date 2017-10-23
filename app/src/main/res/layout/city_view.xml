@@ -12,35 +12,35 @@
     android:paddingEnd="10dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <FrameLayout
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ivCV_city"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="centerCrop" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/ivCV_city"
-                android:layout_gravity="center_horizontal"
-                android:scaleType="centerCrop"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:background="#55000000"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#55000000"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
-                android:layout_gravity="center_horizontal|center_vertical"/>
+        <TextView
+            android:id="@+id/tvCV_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvCV_city"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
 
-                android:textColor="#FFFFFF"
+            android:textColor="#FFFFFF"
+            android:transitionName="@string/transition_city" />
 
-                android:transitionName="@string/transition_city"
-                android:layout_gravity="center_vertical|center_horizontal"/>
-
-        </FrameLayout>
+    </FrameLayout>
     </android.support.v7.widget.CardView>
 

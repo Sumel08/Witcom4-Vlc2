@@ -113,7 +113,7 @@
         </activity>
         <activity
             android:name=".workshop.WitcomWorkshopActivity"
-            android:label="@string/title_activity_witcom_workshop"
+            android:label=""
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -138,7 +138,13 @@
             android:name=".events.NewEventActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_new_event"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:theme="@style/FullscreenTheme" />
+        <!--<activity android:name=".workshop.WitcomActivitiesActivity"></activity>-->
+        <activity
+            android:name=".workshop.WitcomActivitiesActivity"
+            android:label="@string/workshops"
+            android:parentActivityName=".pager.WitcomPagerActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

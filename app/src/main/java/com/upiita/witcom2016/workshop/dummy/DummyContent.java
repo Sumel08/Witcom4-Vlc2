@@ -30,16 +30,70 @@ public class DummyContent {
      */
     public static final Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
 
-    public DummyContent(Context context) {
+    private int city;
+    private Context context;
+
+    public DummyContent(int position, Context context) {
+
+        city = position;
+        this.context = context;
+
+        initItems();
+
+    }
+
+    private void initItems() {
         SQLiteDatabase bd = new WitcomDataBase(context).getReadableDatabase();
 
-        Cursor fila = bd.rawQuery("SELECT * FROM workshops", null);
+        ArrayList<String> monitors = new ArrayList<>();
+        String image = "",
+                title = "",
+                placeName = "";
+
+        Cursor fila = bd.rawQuery("SELECT * FROM activity WHERE activity_type = " + String.valueOf(city), null);
 
 
         if( fila.moveToFirst()) {
 
             do {
-                addItem(new DummyItem(String.valueOf(fila.getString(0)), fila.getString(7), fila.getString(8), fila.getString(6), fila.getString(2), fila.getString(1), fila.getString(3), fila.getString(4), fila.getString(5)));
+                String[] start_datetime = fila.getString(6).replace("Z", "").split("T");
+                String[] end_datetime = fila.getString(7).replace("Z", "").split("T");
+                monitors = new ArrayList<>();
+                title = fila.getString(1);
+
+                Cursor activityPeopleCursor = bd.rawQuery("SELECT * FROM activity_people WHERE activity = " + fila.getString(0), null);
+
+                if (activityPeopleCursor.moveToFirst()) {
+
+                    do {
+                        Cursor peopleCursor = bd.rawQuery("SELECT * FROM people WHERE id = " + activityPeopleCursor.getString(2), null);
+
+                        if (peopleCursor.moveToFirst()) {
+                            image = peopleCursor.getString(4);
+                            monitors.add(peopleCursor.getString(1) + " " + peopleCursor.getString(2));
+                        }
+                        peopleCursor.close();
+                    } while (activityPeopleCursor.moveToNext());
+                }
+                activityPeopleCursor.close();
+
+                Cursor placeCursor = bd.rawQuery("SELECT * FROM place WHERE id = " + fila.getString(9), null);
+
+                if (placeCursor.moveToFirst()) {
+                    placeName = placeCursor.getString(1);
+                }
+
+                addItem(new DummyItem(String.valueOf(fila.getString(0)),
+                        start_datetime[0],
+                        start_datetime[1],
+                        end_datetime[0],
+                        end_datetime[1],
+                        placeName,
+                        monitors,
+                        title,
+                        fila.getString(3),
+                        "\n" + fila.getString(4) + "\n" + "Price" + ": " + fila.getString(5),
+                        image));
             }
             while (fila.moveToNext());
         }
@@ -59,8 +113,10 @@ public class DummyContent {
         public String id;
         public String date;
         public String time;
+        public String end_date;
+        public String end_time;
         public String place;
-        public String monitor;
+        public ArrayList<String> monitor;
         public String title;
         public String about;
         public String notes;
@@ -68,10 +124,12 @@ public class DummyContent {
         public String details;
         public String image;
 
-        public DummyItem(String id, String date, String time, String place, String monitor, String title, String about, String notes, String image) {
+        public DummyItem(String id, String date, String time, String end_date, String end_time, String place, ArrayList<String> monitor, String title, String about, String notes, String image) {
             this.id = id;
             this.date = date;
             this.time = time;
+            this.end_date = end_date;
+            this.end_time = end_time;
             this.place = place;
             this.monitor = monitor;
             this.title = title;

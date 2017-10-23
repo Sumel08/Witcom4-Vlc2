@@ -82,7 +82,7 @@ public class WorkshopDetailFragment extends Fragment {
                     "<font color="+accent+"> /&gt;</font>"));
 
             ((TextView)rootView.findViewById(R.id.monitor)).setText(Html.fromHtml("<font color="+accent+">&lt;" + getString(R.string.monitor) + " </font>" +
-                    "<font color="+dark+">"+mItem.monitor+"</font>"+
+                    "<font color="+dark+">"+mItem.monitor.toString()+"</font>"+
                     "<font color="+accent+"> /&gt;</font>"));
 
             ((TextView)rootView.findViewById(R.id.about)).setText(Html.fromHtml("<font color="+accent+">&lt;" + getString(R.string.about) + "&gt;</font>"));

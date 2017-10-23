@@ -27,6 +27,7 @@ import com.upiita.witcom2016.speaker.WitcomSpeakerActivity;
 import com.upiita.witcom2016.streaming.StreamingActivity;
 import com.upiita.witcom2016.tourism.WitcomTourismActivity;
 import com.upiita.witcom2016.util.UtilApp;
+import com.upiita.witcom2016.workshop.WitcomActivitiesActivity;
 import com.upiita.witcom2016.workshop.WitcomWorkshopActivity;
 import com.viewpagerindicator.IconPagerAdapter;
 
@@ -186,7 +187,7 @@ public class WitcomFragmentAdapter extends FragmentPagerAdapter implements IconP
                     }
 
                     else if(mPager.getCurrentItem() == 3) {
-                        Intent intent = new Intent(rootView.getContext(), WitcomWorkshopActivity.class);
+                        Intent intent = new Intent(rootView.getContext(), WitcomActivitiesActivity.class);
                         intent.putExtra("page", mPager.getCurrentItem()+1);
                         ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
                     }

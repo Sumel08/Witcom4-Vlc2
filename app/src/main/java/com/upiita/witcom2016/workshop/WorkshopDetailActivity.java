@@ -98,17 +98,17 @@ public class WorkshopDetailActivity extends AppCompatActivity {
                     date[1] -> Month
                     date[2] -> Year
                 */
-        String date[] = mItem.date.split("-");
-        String time[] = mItem.time.split("-");
-        String beginTime[] = time[0].split(":");
-        String endTime[] = time[1].split(":");
+        String begin_date[] = mItem.date.split("-");
+        String end_date[] = mItem.end_date.split("-");
+        String beginTime[] = mItem.time.split(":");
+        String endTime[] = mItem.end_time.split(":");
 
         Calendar cal = Calendar.getInstance();
         Intent intent = new Intent(Intent.ACTION_EDIT);
         intent.setType("vnd.android.cursor.item/event");
-        cal.set(Integer.parseInt("20" + date[2]), Integer.parseInt(date[1]) - 1, Integer.parseInt(date[0]), Integer.parseInt(beginTime[0]), Integer.parseInt(beginTime[1]));
+        cal.set(Integer.parseInt(begin_date[0]), Integer.parseInt(begin_date[1]) - 1, Integer.parseInt(begin_date[2]), Integer.parseInt(beginTime[0]), Integer.parseInt(beginTime[1]));
         intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, cal.getTimeInMillis());
-        cal.set(Integer.parseInt("20" + date[2]), Integer.parseInt(date[1]) - 1, Integer.parseInt(date[0]), Integer.parseInt(endTime[0]), Integer.parseInt(endTime[1]));
+        cal.set(Integer.parseInt(end_date[0]), Integer.parseInt(end_date[1]) - 1, Integer.parseInt(end_date[2]), Integer.parseInt(endTime[0]), Integer.parseInt(endTime[1]));
         intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, cal.getTimeInMillis());
         intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
         intent.putExtra(CalendarContract.Events.TITLE, mItem.title);

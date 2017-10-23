@@ -12,16 +12,16 @@
     <string name="title_workshop_list">Talleres</string>
     <string name="title_workshop_detail">Detalle del taller</string>
 
-    <string name="tourism">Turismo</string>
+    <string name="tourism">Lugares de interés</string>
     <string name="speakers">Conferencistas</string>
     <string name="conferences">Programa</string>
-    <string name="workshops">Talleres</string>
+    <string name="workshops">Actividades</string>
     <string name="how_to_arrive">Cómo llegar</string>
     <string name="sketch">Lugar</string>
 
     <string name="description">Descripción</string>
     <string name="address">Dirección</string>
-    <string name="schedule">Horarios</string>
+    <string name="schedule">Programa</string>
     <string name="navigate">Navegar</string>
     <string name="title_activity_witcom_program">Programa</string>
     <string name="action_settings">Ajustes</string>

@@ -71,17 +71,30 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         } else if (conference != null) {
 
             SQLiteDatabase bd = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
-            Cursor fila = bd.rawQuery("SELECT * FROM conferences WHERE id = '" + conference + "'", null);
+            Cursor fila = bd.rawQuery("SELECT * FROM activity WHERE id = '" + conference + "'", null);
             if (fila.moveToFirst()) {
-                Cursor fila2 = bd.rawQuery("SELECT image FROM images WHERE id = '" + fila.getString(6) + "'", null);
-                if (fila2.moveToFirst()) {
-                    mBuilder.setLargeIcon(BitmapFactory.decodeStream(new ByteArrayInputStream(fila2.getBlob(0))));
+
+                Cursor activitPeopleCursor = bd.rawQuery("SELECT * FROM activity_people WHERE activity = " + conference, null);
+                if (activitPeopleCursor.moveToFirst()) {
+                    Cursor peopleCursor = bd.rawQuery("SELECT photo FROM people WHERE id = " + activitPeopleCursor.getString(2), null);
+                    if (peopleCursor.moveToFirst()) {
+                        Cursor fila2 = bd.rawQuery("SELECT image FROM images WHERE id = " + peopleCursor.getString(0), null);
+                        if (fila2.moveToFirst()) {
+                            mBuilder.setLargeIcon(BitmapFactory.decodeStream(new ByteArrayInputStream(fila2.getBlob(0))));
+                        }
+                        fila2.close();
+                    }
+                    peopleCursor.close();
                 }
+                activitPeopleCursor.close();
+
                 mBuilder.setContentTitle(getString(R.string.rate_conference))
                         .setContentText(fila.getString(1))
                         .setWhen(System.currentTimeMillis())
                         .setAutoCancel(true);
             }
+            fila.close();
+            bd.close();
 
             Intent notificationIntent = new Intent(getApplicationContext(), RateActivity.class);
             notificationIntent.putExtra("conference", conference);

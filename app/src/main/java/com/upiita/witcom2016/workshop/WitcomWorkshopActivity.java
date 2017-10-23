@@ -17,12 +17,14 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.upiita.witcom2016.R;
 import com.upiita.witcom2016.WitcomLogoActivity;
 import com.upiita.witcom2016.dataBaseHelper.WitcomDataBase;
 import com.upiita.witcom2016.pager.WitcomPagerActivity;
 import com.upiita.witcom2016.workshop.dummy.DummyContent;
+import com.upiita.witcom2016.workshop.utils.ActivityType;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -49,6 +51,8 @@ public class WitcomWorkshopActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private DummyContent activities;
+    private int activityType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,7 @@ public class WitcomWorkshopActivity extends AppCompatActivity {
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
+        mSectionsPagerAdapter.notifyDataSetChanged();
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -83,9 +88,13 @@ public class WitcomWorkshopActivity extends AppCompatActivity {
 
         fab.setVisibility(View.INVISIBLE);
 
+        Bundle extras = getIntent().getExtras();
+        activityType = extras.getInt("city_id");
+        ((TextView)findViewById(R.id.activity_title_details)).setText(extras.getString("city_name"));
+
         ITEMS.clear();
         ITEM_MAP.clear();
-        new DummyContent(getApplicationContext());
+        activities =  new DummyContent(activityType, getApplicationContext());
 
     }
 
@@ -136,11 +145,13 @@ public class WitcomWorkshopActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             SQLiteDatabase bd = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
-            Cursor fila = bd.rawQuery("SELECT date FROM workshops", null);
+            //Cursor fila = bd.rawQuery("SELECT start_date FROM activity WHERE activity_type = " + String.valueOf(activityType), null);
+            Cursor fila = bd.rawQuery("SELECT start_date FROM activity ", null);
 
             if (fila.moveToFirst()) {
                 do {
-                    dates.add(fila.getString(0));
+                    String[] aux_date = fila.getString(0).split("T");
+                    dates.add(aux_date[0]);
                 } while (fila.moveToNext());
             }
 
@@ -154,14 +165,14 @@ public class WitcomWorkshopActivity extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             String[] date = getPos(dates, position).split("-");
-            date[2] = "20" + date[2];
+            //date[2] = "20" + date[2];
             String weekDay;
-            SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.ENGLISH);
+            SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", getResources().getConfiguration().locale);
 
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]));
+            calendar.set(Integer.parseInt(date[0]), Integer.parseInt(date[1])-1, Integer.parseInt(date[2]));
 
-            weekDay = dayFormat.format(calendar.getTime()) + " " + date[0];
+            weekDay = dayFormat.format(calendar.getTime()) + " " + date[2];
 
             return weekDay;
             //return "Workshops";
