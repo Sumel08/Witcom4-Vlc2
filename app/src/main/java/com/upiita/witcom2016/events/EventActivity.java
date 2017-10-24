@@ -17,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -43,7 +42,6 @@ import com.upiita.witcom2016.R;
 import com.upiita.witcom2016.WitcomLogoActivity;
 import com.upiita.witcom2016.dataBaseHelper.Controller;
 import com.upiita.witcom2016.dataBaseHelper.WitcomDataBase;
-import com.upiita.witcom2016.pager.WitcomPagerActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,7 +54,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import static com.upiita.witcom2016.WitcomLogoActivity.IMAGE_DEFAULT;
 import static com.upiita.witcom2016.WitcomLogoActivity.URL_BASE;
@@ -464,11 +461,23 @@ public class EventActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(JSONArray response) {
                     SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getWritableDatabase();
+
+                    db.execSQL("delete from images");
+
+                    progressDia.setMax(progressDia.getMax()+1);
+                    progressDia.setCancelable(false);
+
+                    new GetImages(response, progressDia).execute();
+
+                    /*
                     try {
                         db.execSQL("delete from images");
+
+
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject object = response.getJSONObject(i);
                             progressDia.setMax(progressDia.getMax()+1);
+                            progressDia.setCancelable(false);
 
                             new GetImage(progressDia).execute(object.getString("id"), object.getString("image"));
 
@@ -477,7 +486,7 @@ public class EventActivity extends AppCompatActivity {
                             if (progressDia.getProgress() == progressDia.getMax()) {
                                 progressDia.dismiss();
                                 startEvent();
-                            }*/
+                            }
                         }
 
                     } catch (JSONException e) {
@@ -489,7 +498,7 @@ public class EventActivity extends AppCompatActivity {
                             progressDia.dismiss();
                             startEvent();
                         }
-                    }
+                    }*/
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -567,6 +576,93 @@ public class EventActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         finish();
+    }
+
+    private class GetImages extends AsyncTask<Void,Integer,Void> {
+
+        private JSONArray jsonArray;
+        private ProgressDialog progressDialog;
+
+        GetImages(JSONArray jsonArray, ProgressDialog progressDialog) {
+            this.jsonArray = jsonArray;
+            this.progressDialog = progressDialog;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            try {
+                JSONObject object = jsonArray.getJSONObject(0);
+                getImage(object.getString("id"), object.getString("image"),0);
+            }
+            catch (JSONException ex) {
+                Log.d("LEMUS IMAGE ERROR", ex.toString());
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            progressDialog.setProgress(progressDialog.getProgress()+1);
+            int index = values[0] + 1;
+            try {
+                JSONObject object = jsonArray.getJSONObject(index);
+                getImage(object.getString("id"), object.getString("image"),index);
+            }
+            catch (JSONException ex) {
+                Log.d("LEMUS IMAGE ERROR", ex.toString());
+            }
+            super.onProgressUpdate(values);
+        }
+
+        private void getImage(final String id, final String imageUrl, final int index){
+            ImageRequest request = new ImageRequest(imageUrl,
+                    new Response.Listener<Bitmap>() {
+                        @Override
+                        public void onResponse(Bitmap bitmap) {
+
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 90, baos);
+                            byte[] b = baos.toByteArray();
+
+                            SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getWritableDatabase();
+
+                            ContentValues values = new ContentValues();
+                            values.put("id", id);
+                            values.put("image", b);
+                            db.insert("images", null, values);
+                            db.close();
+                            if (progressDialog.getProgress() == progressDialog.getMax()-1) {
+                                progressDialog.dismiss();
+                                startEvent();
+                            }
+                            else {
+                                publishProgress(index);
+                            }
+                        }
+                    }, 0, 0, null,
+                    new Response.ErrorListener() {
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("LEMUS IMAGEERROR", error.toString());
+                            Log.d("LEMUS IMAGEERROR", imageUrl);
+                            if (progressDialog.getProgress() == progressDialog.getMax()-1) {
+                                progressDialog.setProgress(progressDialog.getProgress()+1);
+                                progressDialog.dismiss();
+                                startEvent();
+                            }
+                            else {
+                                publishProgress(index);
+                            }
+                        }
+                    });
+            Controller.getInstance().addToRequestQueue(request);
+        }
+
+        private void startEvent() {
+            Intent intent = new Intent(EventActivity.this, WitcomLogoActivity.class);
+            startActivity(intent);
+        }
     }
 
     private class GetImage extends AsyncTask<String, Void, String> {
