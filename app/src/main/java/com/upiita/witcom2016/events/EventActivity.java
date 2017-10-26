@@ -394,7 +394,7 @@ public class EventActivity extends AppCompatActivity {
             bd.insert("version", null, values);
             bd.close();
 
-            //WitcomLogoActivity.URL_BASE = firebaseRemoteConfig.getString("url_witcom");
+            WitcomLogoActivity.URL_BASE = firebaseRemoteConfig.getString("url_witcom");
 
             progressDia.setMax(dataBase.size() + 1);
             progressDia.setProgress(0);
@@ -419,11 +419,7 @@ public class EventActivity extends AppCompatActivity {
                                 ContentValues values = new ContentValues();
 
                                 for (String column: dataBase.get(table)) {
-                                    try{
-                                        values.put(column, object.getJSONObject(column).getString("id"));
-                                    } catch (Exception e) {
-                                        values.put(column, object.getString(column));
-                                    }
+                                    values.put(column, object.getString(column));
                                 }
 
                                 db.insert(table, null, values);
@@ -463,8 +459,7 @@ public class EventActivity extends AppCompatActivity {
                     SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getWritableDatabase();
 
                     db.execSQL("delete from images");
-
-                    progressDia.setMax(progressDia.getMax()+1);
+                    progressDia.setMax(progressDia.getMax()+response.length());
                     progressDia.setCancelable(false);
 
                     new GetImages(response, progressDia).execute();
@@ -592,6 +587,7 @@ public class EventActivity extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
 
             try {
+                progressDialog.setProgress(progressDialog.getProgress()+1);
                 JSONObject object = jsonArray.getJSONObject(0);
                 getImage(object.getString("id"), object.getString("image"),0);
             }

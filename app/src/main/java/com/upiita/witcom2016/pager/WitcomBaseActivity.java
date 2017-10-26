@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -35,6 +36,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.upiita.witcom2016.Constants;
 import com.upiita.witcom2016.R;
 import com.upiita.witcom2016.WitcomLogoActivity;
 import com.upiita.witcom2016.dataBaseHelper.Controller;
@@ -151,57 +153,35 @@ public class WitcomBaseActivity extends AppCompatActivity {
         ArrayList<String> columns;
         requestPending = 0;
 
-        /**
-         * Activities
-         */
-        columns = new ArrayList<>();
-        columns.add("id");
-        columns.add("code");
-        columns.add("description");
-        columns.add("endDate");
-        columns.add("eventImage");
-        columns.add("name");
-        columns.add("place");
-        columns.add("schedule");
-        columns.add("sketch");
-        columns.add("startDate");
-        dataBase.put("event", columns);
-        getURLS.put("event", "/event/getEvent/");
+        getURLS.put("activity", Constants.GET_ACTIVITY);
+        getURLS.put("activity_people", Constants.GET_ACTIVITY_PEOPLE);
+        getURLS.put("activity_type", Constants.GET_ACTIVITY_TYPE);
+        getURLS.put("chairs", Constants.GET_CHAIR);
+        getURLS.put("developers", Constants.GET_DEVELOPER);
+        getURLS.put("event", Constants.GET_EVENT);
+        getURLS.put("people", Constants.GET_PEOPLE);
+        getURLS.put("people_social_networks", "/peopleSocialNetworks/getPeopleSocialNetworks/");
+        getURLS.put("place_category", Constants.GET_PLACE_CATEGORY);
+        getURLS.put("place", Constants.GET_PLACE);
+        getURLS.put("place_social_networks", "/placeSocialNetworks/getPlaceSocialNetworks/");
+        getURLS.put("schedule", "/schedule/getSchedule/");
+        getURLS.put("social_networks", "/socialNetworks/getSocialNetworks/");
+        getURLS.put("sponsors", Constants.GET_SPONSOR);
+        getURLS.put("streams", Constants.GET_STREAM);
+        getURLS.put("sketch", Constants.GET_SKETCH);
 
-        /**
-         * Place
-         */
-        columns = new ArrayList<>();
-        columns.add("id");
-        columns.add("placeName");
-        columns.add("description");
-        columns.add("longitude");
-        columns.add("latitude");
-        columns.add("altitude");
-        columns.add("indication");
-        columns.add("additionalInfo");
-        columns.add("website");
-        columns.add("email");
-        columns.add("telephone");
-        columns.add("image");
-        dataBase.put("place", columns);
-        getURLS.put("place", "/place/getPlaces/");
-
-        /**
-         * People
-         */
-        columns = new ArrayList<>();
-        columns.add("id");
-        columns.add("name");
-        columns.add("surname");
-        columns.add("birthdate");
-        columns.add("photo");
-        columns.add("resume");
-        columns.add("email");
-        columns.add("phone");
-        columns.add("provenance");
-        dataBase.put("people", columns);
-        getURLS.put("people", "/people/getPeople/");
+        SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
+        for(String table: getURLS.keySet()){
+            Cursor fila = db.rawQuery("SELECT * FROM "+ table, null);
+            Log.d("COLUMNS FOR " + table, fila.getColumnNames().toString());
+            columns = new ArrayList<>();
+            for(String column: fila.getColumnNames()){
+                columns.add(column);
+            }
+            dataBase.put(table, columns);
+            fila.close();
+        }
+        db.close();
 
         //tvUpdate.setVisibility(View.INVISIBLE);
 
@@ -214,10 +194,10 @@ public class WitcomBaseActivity extends AppCompatActivity {
         bd.close();
 
         WitcomLogoActivity.URL_BASE = firebaseRemoteConfig.getString("url_witcom");
-        Toast.makeText(this, WitcomLogoActivity.URL_BASE, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, WitcomLogoActivity.URL_BASE, Toast.LENGTH_SHORT).show();
 
         ////URL PRUEBA
-        WitcomLogoActivity.URL_BASE = "http://192.168.0.10:8080";
+        //WitcomLogoActivity.URL_BASE = "http://192.168.0.10:8080";
         //////////////
 
         progressDia.setMax(dataBase.size() + 1);
@@ -227,7 +207,7 @@ public class WitcomBaseActivity extends AppCompatActivity {
         getImages();
 
         for (final String table: dataBase.keySet()) {
-            JsonArrayRequest request = new JsonArrayRequest(URL_BASE + getURLS.get(table) + eventCode, new Response.Listener<JSONArray>() {
+            JsonArrayRequest request = new JsonArrayRequest(URL_BASE + getURLS.get(table), new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
                     SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getWritableDatabase();
@@ -273,26 +253,17 @@ public class WitcomBaseActivity extends AppCompatActivity {
     }
 
     private void getImages () {
-        JsonArrayRequest request = new JsonArrayRequest(URL_BASE + "/images/getImages/" + eventCode, new Response.Listener<JSONArray>() {
+        JsonArrayRequest request = new JsonArrayRequest(URL_BASE + Constants.GET_IMAGES, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getWritableDatabase();
-                try {
-                    db.execSQL("delete from images");
-                    for (int i = 0; i < response.length(); i++) {
-                        JSONObject object = response.getJSONObject(i);
-                        progressDia.setMax(progressDia.getMax()+1);
-                        getImage(object.getString("id"), URL_BASE + object.getString("url"));
-                    }
 
-                } catch (JSONException e) {
-                    Log.d("FATALERROR1", e.toString());
-                } finally {
-                    db.close();
-                    progressDia.setProgress(progressDia.getProgress()+1);
-                    if (progressDia.getProgress() == progressDia.getMax())
-                        progressDia.dismiss();
-                }
+                db.execSQL("delete from images");
+                progressDia.setMax(progressDia.getMax()+response.length());
+                progressDia.setCancelable(false);
+
+                new GetImages(response, progressDia).execute();
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -439,5 +410,87 @@ public class WitcomBaseActivity extends AppCompatActivity {
         bd.close();
         startActivity(new Intent(getApplicationContext(), WitcomLogoActivity.class));
         finish();
+    }
+
+    private class GetImages extends AsyncTask<Void,Integer,Void> {
+
+        private JSONArray jsonArray;
+        private ProgressDialog progressDialog;
+
+        GetImages(JSONArray jsonArray, ProgressDialog progressDialog) {
+            this.jsonArray = jsonArray;
+            this.progressDialog = progressDialog;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            try {
+                progressDialog.setProgress(progressDialog.getProgress()+1);
+                JSONObject object = jsonArray.getJSONObject(0);
+                getImage(object.getString("id"), object.getString("image"),0);
+            }
+            catch (JSONException ex) {
+                Log.d("LEMUS IMAGE ERROR", ex.toString());
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            progressDialog.setProgress(progressDialog.getProgress()+1);
+            int index = values[0] + 1;
+            try {
+                JSONObject object = jsonArray.getJSONObject(index);
+                getImage(object.getString("id"), object.getString("image"),index);
+            }
+            catch (JSONException ex) {
+                Log.d("LEMUS IMAGE ERROR", ex.toString());
+            }
+            super.onProgressUpdate(values);
+        }
+
+        private void getImage(final String id, final String imageUrl, final int index){
+            ImageRequest request = new ImageRequest(imageUrl,
+                    new Response.Listener<Bitmap>() {
+                        @Override
+                        public void onResponse(Bitmap bitmap) {
+
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 90, baos);
+                            byte[] b = baos.toByteArray();
+
+                            SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getWritableDatabase();
+
+                            ContentValues values = new ContentValues();
+                            values.put("id", id);
+                            values.put("image", b);
+                            db.insert("images", null, values);
+                            db.close();
+                            if (progressDialog.getProgress() == progressDialog.getMax()-1) {
+                                progressDialog.dismiss();
+                            }
+                            else {
+                                publishProgress(index);
+                            }
+                        }
+                    }, 0, 0, null,
+                    new Response.ErrorListener() {
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("LEMUS IMAGEERROR", error.toString());
+                            Log.d("LEMUS IMAGEERROR", imageUrl);
+                            if (progressDialog.getProgress() == progressDialog.getMax()-1) {
+                                progressDialog.setProgress(progressDialog.getProgress()+1);
+                                progressDialog.dismiss();
+                            }
+                            else {
+                                publishProgress(index);
+                            }
+                        }
+                    });
+            Controller.getInstance().addToRequestQueue(request);
+        }
+
     }
 }
