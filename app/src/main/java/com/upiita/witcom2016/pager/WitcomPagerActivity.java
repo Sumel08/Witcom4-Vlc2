@@ -31,6 +31,10 @@ import com.upiita.witcom2016.dataBaseHelper.WitcomDataBase;
 import com.upiita.witcom2016.indicator.IndicatorTouch;
 import com.viewpagerindicator.IconPageIndicator;
 
+import me.toptas.fancyshowcase.FancyShowCaseQueue;
+import me.toptas.fancyshowcase.FancyShowCaseView;
+import me.toptas.fancyshowcase.FocusShape;
+
 /**
  * Created by oscar on 27/09/16.
  */
@@ -38,6 +42,8 @@ import com.viewpagerindicator.IconPageIndicator;
 public class WitcomPagerActivity extends WitcomBaseActivity {
 
     Dialog dialog;
+    private FancyShowCaseQueue showCaseQueue = new FancyShowCaseQueue();
+    private FancyShowCaseView caseViewIndicator, caseViewPager, caseViewUpdate;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -47,7 +53,7 @@ public class WitcomPagerActivity extends WitcomBaseActivity {
 
         eventCode = getIntent().getStringExtra("eventCode");
 
-        Toast.makeText(this, "Main Activity: " + eventCode, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Main Activity: " + eventCode, Toast.LENGTH_SHORT).show();
 
         mAdapter = new WitcomFragmentAdapter(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.pager_test);
@@ -74,7 +80,7 @@ public class WitcomPagerActivity extends WitcomBaseActivity {
         //WitcomLogoActivity.URL_BASE = firebaseRemoteConfig.getString("url_witcom");
         //Toast.makeText(this, firebaseRemoteConfig.getString("url_witcom"), Toast.LENGTH_SHORT).show();
 
-        swipeToast();
+        //swipeToast();
         checkUpdate();
 
         /*dialog = new Dialog(this, R.style.Theme_Dialog_Translucent);
@@ -99,6 +105,30 @@ public class WitcomPagerActivity extends WitcomBaseActivity {
         });
 
         dialog.show();*/
+        caseViewIndicator = new FancyShowCaseView.Builder(this)
+                .focusOn((View) findViewById(R.id.indicator_test))
+                .title(getString(R.string.pagerIndicator))
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .roundRectRadius(90)
+                .showOnce("witcomPagerIndicator")
+                .build();
+        caseViewUpdate = new FancyShowCaseView.Builder(this)
+                .focusOn((View) findViewById(R.id.tv_update))
+                .title(getString(R.string.updateIndicator))
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .roundRectRadius(90)
+                .showOnce("witcomUpdateIndicator")
+                .build();
+        caseViewPager = new FancyShowCaseView.Builder(this)
+                .focusOn((View) findViewById(R.id.pager_test))
+                .title(getString(R.string.pagerAction))
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .roundRectRadius(90)
+                .showOnce("witcomPagerAction")
+                .build();
+
+        showCaseQueue.add(caseViewIndicator).add(caseViewUpdate).add(caseViewPager);
+        showCaseQueue.show();
     }
 
     private void swipeToast() {

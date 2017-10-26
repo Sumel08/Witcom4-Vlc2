@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -34,6 +35,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.upiita.witcom2016.BuildConfig;
@@ -54,6 +57,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import me.toptas.fancyshowcase.FancyShowCaseView;
+import me.toptas.fancyshowcase.FocusShape;
 
 import static com.upiita.witcom2016.WitcomLogoActivity.IMAGE_DEFAULT;
 import static com.upiita.witcom2016.WitcomLogoActivity.URL_BASE;
@@ -86,8 +92,47 @@ public class EventActivity extends AppCompatActivity {
                 .build();
 
         firebaseRemoteConfig.setConfigSettings(configSettings);
+        firebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+
+        fetchDiscount();
 
         prepareEvents();
+
+    }
+
+    protected void fetchDiscount() {
+        long cacheExpiration = 3600; // 1 hour in seconds.
+        // If in developer mode cacheExpiration is set to 0 so each fetch will retrieve values from
+        // the server.
+        if (firebaseRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
+            cacheExpiration = 0;
+        }
+
+        firebaseRemoteConfig.fetch(cacheExpiration)
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            //Toast.makeText(WitcomBaseActivity.this, "Fetch Succeeded",
+                            //       Toast.LENGTH_SHORT).show();
+
+                            // Once the config is successfully fetched it must be activated before newly fetched
+                            // values are returned.
+                            firebaseRemoteConfig.activateFetched();
+                        } else {
+                            //Toast.makeText(WitcomBaseActivity.this, "Fetch Failed",
+                            //      Toast.LENGTH_SHORT).show();
+                        }
+
+                        WitcomLogoActivity.URL_BASE = firebaseRemoteConfig.getString("url_witcom");
+                        WitcomLogoActivity.URL_STREAM = firebaseRemoteConfig.getString("url_streaming");
+                        WitcomLogoActivity.URL_STREAM_LQ = firebaseRemoteConfig.getString("url_streaming_lq");
+
+
+                        WitcomLogoActivity.CONTENT_VERSION = firebaseRemoteConfig.getString("data_version");
+
+                    }
+                });
     }
 
     /**
@@ -96,7 +141,7 @@ public class EventActivity extends AppCompatActivity {
     private void prepareEvents() {
 
         final Map<String, String> images = new HashMap<>();
-        Toast.makeText(this, WitcomLogoActivity.URL_BASE + "/images/getImages" , Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, WitcomLogoActivity.URL_BASE + "/images/getImages" , Toast.LENGTH_SHORT).show();
 
         JsonArrayRequest requestImage = new JsonArrayRequest(WitcomLogoActivity.URL_BASE + "/images/getImages", new Response.Listener<JSONArray>() {
             @Override
@@ -239,6 +284,17 @@ public class EventActivity extends AppCompatActivity {
         public EventActivity.EventAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.event_card, parent, false);
+
+            itemView.findViewById(R.id.title);
+
+            new FancyShowCaseView.Builder(EventActivity.this)
+                    .focusOn(itemView)
+                    .title(getString(R.string.selectEvent))
+                    .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                    .roundRectRadius(90)
+                    .showOnce("witcomEvents")
+                    .build()
+                    .show();
 
             return new MyViewHolder(itemView);
         }

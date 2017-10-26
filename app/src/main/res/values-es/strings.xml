@@ -114,4 +114,10 @@
     <string name="title_activity_new_event">NewEventActivity</string>
 
     <string name="swapEvent">Cambia a otro evento</string>
+    <string name="selectEvent">Selecciona un evento para descargar su contenido</string>
+    <string name="pagerIndicator">Selecciona y descubre nuevas secciones</string>
+    <string name="updateIndicator">Indica que los datos han sido actualizados</string>
+    <string name="pagerAction">Desliza y descubre</string>
+
+    <string name="activityPlace">Lugar</string>
 </resources>

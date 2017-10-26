@@ -85,6 +85,7 @@ public class ConferenceFragment extends Fragment {
             holder.mTypeView.setText(holder.mItem.type);
             holder.mContentView.setText(holder.mItem.title);
             holder.mTimeView.setText(holder.mItem.time);
+            holder.mPlaceName.setText(holder.mItem.placeName);
 
             SQLiteDatabase bd = new WitcomDataBase(getContext()).getReadableDatabase();
             Cursor fila = bd.rawQuery("SELECT image FROM images WHERE id = '" + holder.mItem.image + "'", null);
@@ -121,6 +122,7 @@ public class ConferenceFragment extends Fragment {
             public final TextView mTimeView;
             public final ImageView mImage;
             public final TextView mTypeView;
+            public final TextView mPlaceName;
             public DummyContent.DummyItem mItem;
 
             public ViewHolder(View view) {
@@ -131,6 +133,7 @@ public class ConferenceFragment extends Fragment {
                 mTimeView = (TextView) view.findViewById(R.id.time);
                 mImage = (ImageView) view.findViewById(R.id.schedule_image);
                 mTypeView = (TextView) view.findViewById(R.id.conference_type);
+                mPlaceName = (TextView) view.findViewById(R.id.activityPlaceName);
             }
 
             @Override

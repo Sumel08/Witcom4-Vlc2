@@ -7,8 +7,8 @@ android {
         applicationId "com.upiita.witcom2016"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 20
-        versionName "4.0.0"
+        versionCode 21
+        versionName "4.17.1"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -45,6 +45,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
     compile 'de.mrmaffen:vlc-android-sdk:1.0.6'
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.github.faruktoptas:FancyShowCaseView:1.0.0'
     testCompile 'junit:junit:4.12'
 }
 
