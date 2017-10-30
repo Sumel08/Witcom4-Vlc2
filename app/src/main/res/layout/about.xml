@@ -35,6 +35,11 @@
                     android:layout_height="1dp"
                     android:background="@color/custWhite"/>
 
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/sponsorsRecycler"/>
+
                 <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

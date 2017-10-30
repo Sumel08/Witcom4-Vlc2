@@ -95,30 +95,36 @@ public class WitcomSpeakerActivity extends AppCompatActivity {
 
         /*OBTENEMOS TODAS LAS CONFERENCIAS, DE AHÍ A LOS PONENTES*/
 
-        Cursor activityPeopleCursor = db.rawQuery("SELECT * FROM activity_people", null);
+        Cursor activityTypeCursor = db.rawQuery("SELECT id FROM activity_type WHERE show_speakers_in_app = \"true\"", null);
 
-        if (activityPeopleCursor.moveToFirst()) {
+        if (activityTypeCursor.moveToFirst()) {
             do {
-                Cursor personCursor = db.rawQuery("SELECT * FROM people where id = " + activityPeopleCursor.getString(2), null);
-                if (personCursor.moveToFirst()) {
-                    Cursor activityCursor = db.rawQuery("SELECT * FROM activity where id = " + activityPeopleCursor.getString(1), null);
+                Cursor activityPeopleCursor = db.rawQuery("SELECT * FROM activity_people", null);
 
-                    if (activityCursor.moveToFirst()) {
-                        items.add(new Speaker(
-                                personCursor.getString(4),
-                                personCursor.getString(1),
-                                personCursor.getString(8),
-                                activityCursor.getString(1),
-                                personCursor.getString(2),
-                                personCursor.getString(3),
-                                personCursor.getString(4),
-                                personCursor.getString(5),
-                                personCursor.getString(6),
-                                personCursor.getString(7),
-                                personCursor.getString(8) ));
-                    }
+                if (activityPeopleCursor.moveToFirst()) {
+                    do {
+                        Cursor personCursor = db.rawQuery("SELECT * FROM people where id = " + activityPeopleCursor.getString(2), null);
+                        if (personCursor.moveToFirst()) {
+                            Cursor activityCursor = db.rawQuery("SELECT * FROM activity where id = " + activityPeopleCursor.getString(1) + " and activity_type = " + activityTypeCursor.getString(0), null);
+
+                            if (activityCursor.moveToFirst()) {
+                                items.add(new Speaker(
+                                        personCursor.getString(4),
+                                        personCursor.getString(1),
+                                        personCursor.getString(8),
+                                        activityCursor.getString(1),
+                                        personCursor.getString(2),
+                                        personCursor.getString(3),
+                                        personCursor.getString(4),
+                                        personCursor.getString(5),
+                                        personCursor.getString(6),
+                                        personCursor.getString(7),
+                                        personCursor.getString(8) ));
+                            }
+                        }
+                    } while (activityPeopleCursor.moveToNext());
                 }
-            } while (activityPeopleCursor.moveToNext());
+            } while (activityTypeCursor.moveToNext());
         }
 
         db.close();

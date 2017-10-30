@@ -40,7 +40,8 @@ public class WitcomDataBase extends SQLiteOpenHelper {
             "created   TEXT," +
             "show_in_app   TEXT," +
             "image   TEXT," +
-            "event    TEXT" +
+            "event    TEXT," +
+            "show_speakers_in_app   TEXT" +
             ");";
 
     public static final String CHAIRS_TABLE = "CREATE TABLE chairs (" +

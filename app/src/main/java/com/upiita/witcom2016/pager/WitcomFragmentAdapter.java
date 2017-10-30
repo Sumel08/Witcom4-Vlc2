@@ -3,6 +3,9 @@ package com.upiita.witcom2016.pager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -11,7 +14,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +29,9 @@ import android.widget.Toast;
 
 import com.upiita.witcom2016.R;
 import com.upiita.witcom2016.conference.WitcomProgramActivity;
+import com.upiita.witcom2016.dataBaseHelper.WitcomDataBase;
+import com.upiita.witcom2016.events.EventActivity;
+import com.upiita.witcom2016.events.aboutUtil.Sponsor;
 import com.upiita.witcom2016.sketch.WitcomSketchActivity;
 import com.upiita.witcom2016.speaker.WitcomSpeakerActivity;
 import com.upiita.witcom2016.streaming.StreamingActivity;
@@ -30,6 +40,10 @@ import com.upiita.witcom2016.util.UtilApp;
 import com.upiita.witcom2016.workshop.WitcomActivitiesActivity;
 import com.upiita.witcom2016.workshop.WitcomWorkshopActivity;
 import com.viewpagerindicator.IconPagerAdapter;
+
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.upiita.witcom2016.WitcomLogoActivity.URL_STREAM;
 import static com.upiita.witcom2016.pager.WitcomBaseActivity.accent;
@@ -193,7 +207,27 @@ public class WitcomFragmentAdapter extends FragmentPagerAdapter implements IconP
                     }
 
                     else if(mPager.getCurrentItem() == 4) {
+
+                        String longitude = "-99.126226";
+                        String latitude = "19.511371";
+
+                        /*Obtenemos las coordenadas del evento, por default serán upiita*/
+                        SQLiteDatabase db = new WitcomDataBase(getContext()).getReadableDatabase();
+                        Cursor eventPlaceCursor = db.rawQuery("SELECT place FROM event", null);
+                        if (eventPlaceCursor.moveToFirst()) {
+                            Cursor placeCursor = db.rawQuery("SELECT * FROM place WHERE id = " + eventPlaceCursor.getString(0), null);
+                            if (placeCursor.moveToFirst()) {
+                                longitude = placeCursor.getString(3);
+                                latitude = placeCursor.getString(4);
+                            }
+                            placeCursor.close();
+                        }
+                        eventPlaceCursor.close();
+                        db.close();
+
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(rootView.getContext());
+                        final String finalLongitude = longitude;
+                        final String finalLatitude = latitude;
                         alertDialogBuilder
                                 .setCancelable(false)
                                 .setTitle(getString(R.string.navigation))
@@ -222,21 +256,21 @@ public class WitcomFragmentAdapter extends FragmentPagerAdapter implements IconP
                                                         RadioButton rbw = (RadioButton)layout.findViewById(R.id.walk);
 
                                                         if(rbc.isChecked()) {
-                                                            Uri gmmIntentUri = Uri.parse("google.navigation:q=" + "21.0152018" + "," + "-101.5028277");
+                                                            Uri gmmIntentUri = Uri.parse("google.navigation:q=" + finalLatitude + "," + finalLongitude);
                                                             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                                                             mapIntent.setPackage("com.google.android.apps.maps");
                                                             startActivity(mapIntent);
                                                             dialog.cancel();
                                                         }
                                                         else if(rbb.isChecked()) {
-                                                            Uri gmmIntentUri = Uri.parse("google.navigation:q=" + "21.0152018" + "," + "-101.5028277" + "&mode=b");
+                                                            Uri gmmIntentUri = Uri.parse("google.navigation:q=" + finalLatitude + "," + finalLongitude + "&mode=b");
                                                             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                                                             mapIntent.setPackage("com.google.android.apps.maps");
                                                             startActivity(mapIntent);
                                                             dialog.cancel();
                                                         }
                                                         else if(rbw.isChecked()) {
-                                                            Uri gmmIntentUri = Uri.parse("google.navigation:q=" + "21.0152018" + "," + "-101.5028277" + "&mode=w");
+                                                            Uri gmmIntentUri = Uri.parse("google.navigation:q=" + finalLatitude + "," + finalLongitude + "&mode=w");
                                                             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                                                             mapIntent.setPackage("com.google.android.apps.maps");
                                                             startActivity(mapIntent);
@@ -269,7 +303,7 @@ public class WitcomFragmentAdapter extends FragmentPagerAdapter implements IconP
                         ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
                     }
                     else if(mPager.getCurrentItem() == 7) {
-                        new AlertDialog.Builder(getContext())
+                        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                                 .setView(R.layout.about)
                                 .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
@@ -277,12 +311,82 @@ public class WitcomFragmentAdapter extends FragmentPagerAdapter implements IconP
                                     }
                                 })
                                 .show();
+                        ArrayList<Sponsor> sposorList = new ArrayList<>();
+
+                        SQLiteDatabase db = new WitcomDataBase(getContext()).getReadableDatabase();
+                        Cursor sponsorsCursor = db.rawQuery("SELECT person FROM sponsors", null);
+                        if (sponsorsCursor.moveToFirst()) {
+                            do {
+                                Cursor peopleCursor = db.rawQuery("SELECT * FROM people WHERE id = " + sponsorsCursor.getString(0), null);
+                                if (peopleCursor.moveToFirst()) {
+                                    Log.d("SPONSORTAG", peopleCursor.getString(1) + ":" + peopleCursor.getString(4));
+                                    sposorList.add(new Sponsor(peopleCursor.getString(1), peopleCursor.getString(4)));
+                                }
+                            } while (sponsorsCursor.moveToNext());
+                        }
+                        sponsorsCursor.close();
+
+
+                        RecyclerView sponsors = (RecyclerView) alertDialog.findViewById(R.id.sponsorsRecycler);
+                        SponsorAdapter adapter = new SponsorAdapter(getContext(), sposorList);
+
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
+                        sponsors.setLayoutManager(mLayoutManager);
+                        sponsors.setItemAnimator(new DefaultItemAnimator());
+                        sponsors.setAdapter(adapter);
+
                     }
                 }
             });
 
             return rootView;
 
+        }
+    }
+
+    public static class SponsorAdapter extends RecyclerView.Adapter<SponsorAdapter.SponsorViewHolder> {
+        private ArrayList<Sponsor> sponsorList;
+        private Context mContext;
+
+        public SponsorAdapter(Context mContext, ArrayList<Sponsor> sponsorList) {
+            this.sponsorList = sponsorList;
+            this.mContext = mContext;
+        }
+
+        @Override
+        public SponsorAdapter.SponsorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(mContext).inflate(R.layout.sponsor_card, parent, false);
+            return new SponsorViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(SponsorAdapter.SponsorViewHolder holder, int position) {
+            final Sponsor sponsor = sponsorList.get(position);
+
+            SQLiteDatabase bd = new WitcomDataBase(mContext).getReadableDatabase();
+            Cursor fila = bd.rawQuery("SELECT image FROM images WHERE id = " + sponsor.getImage(), null);
+            if (fila.moveToFirst()) {
+                do {
+                    holder.sponsorImage.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(fila.getBlob(0))));
+                } while (fila.moveToNext());
+            }
+
+            fila.close();
+            bd.close();
+        }
+
+        @Override
+        public int getItemCount() {
+            return sponsorList.size();
+        }
+
+        public class SponsorViewHolder extends RecyclerView.ViewHolder {
+            public ImageView sponsorImage;
+
+            public SponsorViewHolder(View itemView) {
+                super(itemView);
+                sponsorImage = (ImageView) itemView.findViewById(R.id.imageViewSponsor);
+            }
         }
     }
 }
