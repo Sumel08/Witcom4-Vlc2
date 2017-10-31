@@ -32,6 +32,10 @@ import com.upiita.witcom2016.conference.WitcomProgramActivity;
 import com.upiita.witcom2016.dataBaseHelper.WitcomDataBase;
 import com.upiita.witcom2016.events.EventActivity;
 import com.upiita.witcom2016.events.aboutUtil.Sponsor;
+import com.upiita.witcom2016.pager.util.Chair;
+import com.upiita.witcom2016.pager.util.ChairAdapter;
+import com.upiita.witcom2016.pager.util.Developer;
+import com.upiita.witcom2016.pager.util.DeveloperAdapter;
 import com.upiita.witcom2016.sketch.WitcomSketchActivity;
 import com.upiita.witcom2016.speaker.WitcomSpeakerActivity;
 import com.upiita.witcom2016.streaming.StreamingActivity;
@@ -312,6 +316,8 @@ public class WitcomFragmentAdapter extends FragmentPagerAdapter implements IconP
                                 })
                                 .show();
                         ArrayList<Sponsor> sposorList = new ArrayList<>();
+                        ArrayList<Chair> chairList = new ArrayList<>();
+                        ArrayList<Developer> developerList = new ArrayList<>();
 
                         SQLiteDatabase db = new WitcomDataBase(getContext()).getReadableDatabase();
                         Cursor sponsorsCursor = db.rawQuery("SELECT person FROM sponsors", null);
@@ -322,9 +328,34 @@ public class WitcomFragmentAdapter extends FragmentPagerAdapter implements IconP
                                     Log.d("SPONSORTAG", peopleCursor.getString(1) + ":" + peopleCursor.getString(4));
                                     sposorList.add(new Sponsor(peopleCursor.getString(1), peopleCursor.getString(4)));
                                 }
+                                peopleCursor.close();
                             } while (sponsorsCursor.moveToNext());
                         }
                         sponsorsCursor.close();
+
+                        Cursor chairsCursor = db.rawQuery("SELECT person FROM chairs", null);
+                        if (chairsCursor.moveToFirst()) {
+                            do {
+                                Cursor peopleCursor = db.rawQuery("SELECT * FROM people WHERE id = " + chairsCursor.getString(0), null);
+                                if (peopleCursor.moveToFirst()) {
+                                    chairList.add(new Chair(peopleCursor.getString(1) + ' ' + peopleCursor.getString(2), peopleCursor.getString(6), peopleCursor.getString(4)));
+                                }
+                                peopleCursor.close();
+                            } while (chairsCursor.moveToNext());
+                        }
+                        chairsCursor.close();
+
+                        Cursor developerCursor = db.rawQuery("SELECT person FROM developers", null);
+                        if (developerCursor.moveToFirst()) {
+                            do {
+                                Cursor peopleCursor = db.rawQuery("SELECT * FROM people WHERE id = " + developerCursor.getString(0), null);
+                                if (peopleCursor.moveToFirst()) {
+                                    developerList.add(new Developer(peopleCursor.getString(1) + ' ' + peopleCursor.getString(2), peopleCursor.getString(6), peopleCursor.getString(4)));
+                                }
+                                peopleCursor.close();
+                            } while (developerCursor.moveToNext());
+                        }
+                        developerCursor.close();
 
 
                         RecyclerView sponsors = (RecyclerView) alertDialog.findViewById(R.id.sponsorsRecycler);
@@ -334,6 +365,24 @@ public class WitcomFragmentAdapter extends FragmentPagerAdapter implements IconP
                         sponsors.setLayoutManager(mLayoutManager);
                         sponsors.setItemAnimator(new DefaultItemAnimator());
                         sponsors.setAdapter(adapter);
+
+                        /*Chair*/
+                        RecyclerView chairs = (RecyclerView) alertDialog.findViewById(R.id.chairsRecycler);
+                        ChairAdapter chairAdapter = new ChairAdapter(getContext(), chairList);
+
+                        RecyclerView.LayoutManager mLayoutManagerChair = new GridLayoutManager(getContext(), 1);
+                        chairs.setLayoutManager(mLayoutManagerChair);
+                        chairs.setItemAnimator(new DefaultItemAnimator());
+                        chairs.setAdapter(chairAdapter);
+
+                        /*Developer*/
+                        RecyclerView developers = (RecyclerView) alertDialog.findViewById(R.id.developersRecycler);
+                        DeveloperAdapter developerAdapter = new DeveloperAdapter(getContext(), developerList);
+
+                        RecyclerView.LayoutManager mLayoutManagerDeveloper = new GridLayoutManager(getContext(), 1);
+                        developers.setLayoutManager(mLayoutManagerDeveloper);
+                        developers.setItemAnimator(new DefaultItemAnimator());
+                        developers.setAdapter(developerAdapter);
 
                     }
                 }
@@ -373,6 +422,7 @@ public class WitcomFragmentAdapter extends FragmentPagerAdapter implements IconP
 
             fila.close();
             bd.close();
+
         }
 
         @Override

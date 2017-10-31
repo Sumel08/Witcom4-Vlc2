@@ -292,7 +292,12 @@ International Congress on Telematics, Computing and Communications" />
                     android:layout_height="1dp"
                     android:background="@color/custWhite"/>
 
-                <LinearLayout
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/chairsRecycler"/>
+
+                <!--<LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -338,7 +343,7 @@ International Congress on Telematics, Computing and Communications" />
                         android:layout_marginStart="10dp"
                         android:onClick="sendMail"/>
 
-                </LinearLayout>
+                </LinearLayout>-->
 
             </LinearLayout>
 
@@ -361,43 +366,48 @@ International Congress on Telematics, Computing and Communications" />
                     android:layout_height="1dp"
                     android:background="@color/colorAccent"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/edgar_hernandez"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="15sp"
-                    android:layout_gravity="left"
-                    android:id="@+id/edgar"
-                    android:onClick="sendMail"/>
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/developersRecycler"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/oscar_lemus"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="15sp"
-                    android:layout_gravity="left"
-                    android:id="@+id/lemus"
-                    android:onClick="sendMail"/>
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/edgar_hernandez"-->
+                    <!--android:textColor="@color/colorAccent"-->
+                    <!--android:textSize="15sp"-->
+                    <!--android:layout_gravity="left"-->
+                    <!--android:id="@+id/edgar"-->
+                    <!--android:onClick="sendMail"/>-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/oscar_lemus"-->
+                    <!--android:textColor="@color/colorAccent"-->
+                    <!--android:textSize="15sp"-->
+                    <!--android:layout_gravity="left"-->
+                    <!--android:id="@+id/lemus"-->
+                    <!--android:onClick="sendMail"/>-->
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/miguel_maldonado"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="15sp"
-                    android:layout_gravity="left"
-                    android:id="@+id/mike"
-                    android:onClick="sendMail"/>
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/miguel_maldonado"-->
+                    <!--android:textColor="@color/colorAccent"-->
+                    <!--android:textSize="15sp"-->
+                    <!--android:layout_gravity="left"-->
+                    <!--android:id="@+id/mike"-->
+                    <!--android:onClick="sendMail"/>-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/address"
-                    android:textSize="12sp"
-                    android:textColor="@color/colorAccent"/>
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/address"-->
+                    <!--android:textSize="12sp"-->
+                    <!--android:textColor="@color/colorAccent"/>-->
 
             </LinearLayout>
 
