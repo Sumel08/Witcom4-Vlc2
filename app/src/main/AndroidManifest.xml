@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".dataBaseHelper.Controller"
@@ -145,6 +147,9 @@
             android:label="@string/workshops"
             android:parentActivityName=".pager.WitcomPagerActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <service android:name=".GeofenceService" android:exported="true" android:enabled="true"/>
+
     </application>
 
 </manifest>
