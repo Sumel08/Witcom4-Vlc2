@@ -61,6 +61,7 @@
     <string name="updating">Updating</string>
     <string name="wait">Please wait a moment</string>
     <string name="update">Update</string>
+    <string name="geofence">Location alerts</string>
 
     <string name="date">Date</string>
     <string name="title">Title</string>

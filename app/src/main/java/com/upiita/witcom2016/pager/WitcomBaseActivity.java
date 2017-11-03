@@ -1,27 +1,24 @@
 package com.upiita.witcom2016.pager;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,16 +30,25 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallbacks;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.upiita.witcom2016.Constants;
+import com.upiita.witcom2016.GeofenceService;
 import com.upiita.witcom2016.R;
+import com.upiita.witcom2016.RegionGeofence;
 import com.upiita.witcom2016.WitcomLogoActivity;
 import com.upiita.witcom2016.dataBaseHelper.Controller;
 import com.upiita.witcom2016.dataBaseHelper.WitcomDataBase;
-import com.upiita.witcom2016.rate.RateActivity;
-import com.upiita.witcom2016.streaming.StreamingActivity;
 import com.viewpagerindicator.PageIndicator;
 
 import org.json.JSONArray;
@@ -52,10 +58,12 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import static com.upiita.witcom2016.WitcomLogoActivity.URL_BASE;
-import static com.upiita.witcom2016.WitcomLogoActivity.URL_STREAM;
 
 /**
  * Created by oscar on 26/09/16.
@@ -78,6 +86,18 @@ public class WitcomBaseActivity extends AppCompatActivity {
     WitcomFragmentAdapter mAdapter;
     public static ViewPager mPager;
     PageIndicator mIndicator;
+
+    //Geocercas
+    GoogleApiClient googleApiClient = null;
+    public static final String TAG = "WitcomBaseActivity";
+    ////////////////////////////////////////////////////////
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem checkable = menu.findItem(R.id.geofence);
+        checkable.setChecked(this.getPreferences(Context.MODE_PRIVATE).getBoolean(Constants.IS_GEOFENCE_ACTIVE, Constants.IS_GEOFENCE));
+        return super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -128,6 +148,44 @@ public class WitcomBaseActivity extends AppCompatActivity {
             update();
         } else if(id == R.id.swapEvent) {
             clearEvent();
+        } else if(id == R.id.geofence) {
+
+            boolean isGeo = this.getPreferences(Context.MODE_PRIVATE).getBoolean(Constants.IS_GEOFENCE_ACTIVE, Constants.IS_GEOFENCE);
+
+            item.setChecked(!isGeo);
+
+            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(Constants.IS_GEOFENCE_ACTIVE, !isGeo);
+            editor.commit();
+
+            if(isGeo) {
+                stopGeofenceMonitoring();
+                googleApiClient.disconnect();
+            } else {
+                googleApiClient.reconnect();
+                googleApiClient = new GoogleApiClient.Builder(this)
+                        .addApi(LocationServices.API)
+                        .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                            @Override
+                            public void onConnected(@Nullable Bundle bundle) {
+                                Log.d(TAG, "Connected to GoogleApiClient");
+                                starGeofenceMonitoring(getLocations());
+                            }
+
+                            @Override
+                            public void onConnectionSuspended(int i) {
+                                Log.d(TAG, "Suspended connection to GoogleApiClient");
+                            }
+                        })
+                        .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                            @Override
+                            public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                                Log.d(TAG, "Failed to connect to GoogleApiClient - " + connectionResult.getErrorMessage());
+                            }
+                        })
+                        .build();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -493,4 +551,151 @@ public class WitcomBaseActivity extends AppCompatActivity {
         }
 
     }
+
+    //GEOCERCAS
+    public void startLocationMonitoring() {
+        Log.d(TAG, "startLocation called");
+        try {
+            LocationRequest locationRequest = LocationRequest.create()
+                    .setInterval(Constants.GEOFENCE_INTERVAL)
+                    .setFastestInterval(Constants.GEOFENCE_FASTEST_INTERVAL)
+                    //.setNumUpdates(Constants.GEOFENCE_NUM_UPDATES)
+                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    Log.d(TAG, "Location update lat/long " + location.getLatitude() + " " + location.getLongitude());
+                }
+            });
+        } catch (SecurityException e) {
+            Log.d(TAG, "Security exception - " + e.getMessage());
+        }
+    }
+
+    public void starGeofenceMonitoring(ArrayList<RegionGeofence> coordinates) {
+        Log.d(TAG, "startMonitoring called");
+        List<Geofence> geofenceList = new ArrayList<>();
+        Geofence geofence;
+
+        try {
+            for(RegionGeofence region: coordinates) {
+                Log.d("DB", "NAME: " + region.name);
+                geofence = new Geofence.Builder()
+                        .setRequestId(region.id)
+                        .setCircularRegion(region.latitude, region.longitude, region.radius)
+                        .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                        .setNotificationResponsiveness(Constants.GEOFENCE_NOTIFICATION_RESPONSIVENESS)
+                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                        .build();
+                geofenceList.add(geofence);
+            }
+
+            GeofencingRequest geofencingRequest = new GeofencingRequest.Builder()
+                    .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+                    .addGeofences(geofenceList)
+                    .build();
+
+            /*Geofence geofence = new Geofence.Builder()
+                    .setRequestId(GEOFENCE_ID)
+                    .setCircularRegion(19.494886, -99.119906, Constants.GEOFENCE_TOURISM_RADIUS)
+                    .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                    .setNotificationResponsiveness(Constants.GEOFENCE_NOTIFICATION_RESPONSIVENESS)
+                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                    .build();
+            GeofencingRequest geofencingRequest = new GeofencingRequest.Builder()
+                    .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+                    .addGeofence(geofence)
+                    .build();*/
+
+            Intent intent = new Intent(this, GeofenceService.class);
+            PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            googleApiClient.connect();
+
+            if(!googleApiClient.isConnected()) {
+                Log.d(TAG, "GoogleApiClient is not connected, not adding geofences");
+            } else {
+                LocationServices.GeofencingApi.addGeofences(googleApiClient, geofencingRequest, pendingIntent)
+                        .setResultCallback(new ResultCallbacks<Status>() {
+                            @Override
+                            public void onSuccess(@NonNull Status status) {
+                                Log.d(TAG, "Successfully added geofence");
+                            }
+
+                            @Override
+                            public void onFailure(@NonNull Status status) {
+                                Log.d(TAG, "Failed to add geofence - " + status.getStatus());
+                            }
+                        });
+            }
+        } catch (SecurityException e) {
+            Log.d(TAG, "Securty exception - " + e.getMessage());
+        } catch (Exception e) {
+            Log.d(TAG, "Exception - " + e.getMessage());
+        }
+
+    }
+
+    public void stopGeofenceMonitoring() {
+        Log.d(TAG, "stopMonitoring Called");
+        ArrayList<String> geofencesIds = new ArrayList<String>();
+        ArrayList<RegionGeofence> regionGeofences = getLocations();
+
+        for(RegionGeofence geofence: regionGeofences) {
+            geofencesIds.add(geofence.id);
+        }
+
+        LocationServices.GeofencingApi.removeGeofences(googleApiClient, geofencesIds);
+    }
+
+    //Se obtiene un arreglo de geocercas apartir de los datos encontrados en la base de datos
+    public ArrayList<RegionGeofence> getLocations() {
+        SQLiteDatabase bd = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
+        Cursor fila = bd.rawQuery("SELECT * FROM place pl INNER JOIN place_category ct ON pl.place_category LIKE ct.id WHERE ct.show_in_app = 'true'", null);
+        ArrayList<RegionGeofence> coordinates =  new ArrayList<RegionGeofence>();
+        RegionGeofence regionGeofence;
+        if (fila.moveToFirst()) {
+            do {
+                regionGeofence = new RegionGeofence(fila.getString(0), fila.getString(1), Double.parseDouble(fila.getString(4)), Double.parseDouble(fila.getString(3)), Constants.GEOFENCE_TOURISM_RADIUS);
+                coordinates.add(regionGeofence);
+            } while (fila.moveToNext());
+        }
+        fila.close();
+
+        Cursor cur = bd.rawQuery("SELECT * FROM place pl INNER JOIN event ev ON pl.id LIKE ev.place", null);
+        if (cur.moveToFirst()) {
+            do {
+                regionGeofence = new RegionGeofence(cur.getString(0), cur.getString(1), Double.parseDouble(cur.getString(4)), Double.parseDouble(cur.getString(3)), Constants.GEOFENCE_TOURISM_RADIUS);
+                coordinates.add(regionGeofence);
+            } while (cur.moveToNext());
+        }
+        cur.close();
+
+        bd.close();
+
+        regionGeofence = new RegionGeofence("Indios Verdes", "Indios Verdes", 19.494739, -99.122002,1000);
+        coordinates.add(regionGeofence);
+
+        regionGeofence = new RegionGeofence("Zocalo", "Zocalo", 19.432590, -99.133206, 1000);
+        coordinates.add(regionGeofence);
+
+        regionGeofence = new RegionGeofence("Bellas Artes", "Bellas Artes", 19.435293, -99.141305, 1000);
+        coordinates.add(regionGeofence);
+
+        regionGeofence = new RegionGeofence("Salon Corona", "Salon Corona", 19.433884, -99.139745, 10);
+        coordinates.add(regionGeofence);
+
+        regionGeofence = new RegionGeofence("El Huequito", "El Huequito", 19.430265, -99.138796, 10);
+        coordinates.add(regionGeofence);
+
+        regionGeofence = new RegionGeofence("Casa Lemus", "Casa Lemus", 19.498256, -99.078180, 10);
+        coordinates.add(regionGeofence);
+
+        regionGeofence = new RegionGeofence("Bancomer", "Bancomer", 19.501102, -99.131321, 100);
+        coordinates.add(regionGeofence);
+
+        return coordinates;
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

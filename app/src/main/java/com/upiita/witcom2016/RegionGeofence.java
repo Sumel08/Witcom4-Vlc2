@@ -6,14 +6,22 @@ import android.graphics.PointF;
  * Created by Edgar on 02/11/2017.
  */
 
-public class Coordinate extends PointF {
+public class RegionGeofence extends PointF {
+
+    public String id;
+    public String name;
     public double latitude;
     public double longitude;
+    public int radius;
 
-    public Coordinate(double latitude, double longitude){
+
+    public RegionGeofence(String id, String name, double latitude, double longitude, int radius){
         this.set((float) latitude,(float) longitude);
+        this.id = id;
+        this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.radius = radius;
     }
 
     public double Length(){
@@ -21,10 +29,13 @@ public class Coordinate extends PointF {
         return l;
     }
 
-    public final void set(double latitude, double longitude){
+    public final void set(String id, String name, double latitude, double longitude){
         this.set((float) latitude,(float) longitude);
+        this.id = id;
+        this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.radius = radius;
     }
 
 }

@@ -19,4 +19,16 @@ public class Constants {
     public static String GET_SKETCH = "/witcom2017/sketch.json";
     public static String GET_SPONSOR = "/witcom2017/sponsor.json";
     public static String GET_STREAM = "/witcom2017/stream.json";
+
+    //GEOFENCES
+    public static int PERMISSION_REQUEST_CODE =  1234;
+    public static String WITCOM_GEOFENCE_ID =  "WITCOM_GEOFENCE";
+    public static int GEOFENCE_INTERVAL =  10000;
+    public static int GEOFENCE_FASTEST_INTERVAL =  5000;
+    public static int GEOFENCE_NUM_UPDATES =  5;
+    public static int GEOFENCE_WITCOM_RADIUS =  2000;
+    public static int GEOFENCE_TOURISM_RADIUS =  1000;
+    public static int GEOFENCE_NOTIFICATION_RESPONSIVENESS = 1000;
+    public static String IS_GEOFENCE_ACTIVE = "IS_GEOFENCE_ACTIVE";
+    public static boolean IS_GEOFENCE = true;
 }

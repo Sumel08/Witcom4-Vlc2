@@ -4,13 +4,18 @@
     tools:context="com.upiita.witcom2016.pager.WitcomPagerActivity">
 
     <item
+        android:id="@+id/geofence"
+        android:orderInCategory="101"
+        android:checkable="true"
+        android:title="@string/geofence" />
+    <item
         android:id="@+id/update"
-        android:orderInCategory="100"
+        android:orderInCategory="101"
         android:title="@string/update" />
 
     <item
         android:id="@+id/swapEvent"
-        android:orderInCategory="100"
+        android:orderInCategory="101"
         android:title="@string/swapEvent" />
 
 </menu>

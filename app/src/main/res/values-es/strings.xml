@@ -62,6 +62,7 @@
     <string name="updating">Actualizando</string>
     <string name="wait">Por favor espere un momento</string>
     <string name="update">Actualizar</string>
+    <string name="geofence">Alertas de ubicación</string>
 
     <string name="date">Fecha</string>
     <string name="title">Título</string>

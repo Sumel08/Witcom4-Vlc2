@@ -1,35 +1,36 @@
 package com.upiita.witcom2016.pager;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.upiita.witcom2016.BuildConfig;
+import com.upiita.witcom2016.Constants;
 import com.upiita.witcom2016.R;
-import com.upiita.witcom2016.WitcomLogoActivity;
 import com.upiita.witcom2016.dataBaseHelper.WitcomDataBase;
 import com.upiita.witcom2016.indicator.IndicatorTouch;
-import com.viewpagerindicator.IconPageIndicator;
 
 import me.toptas.fancyshowcase.FancyShowCaseQueue;
 import me.toptas.fancyshowcase.FancyShowCaseView;
@@ -129,6 +130,38 @@ public class WitcomPagerActivity extends WitcomBaseActivity {
 
         showCaseQueue.add(caseViewIndicator).add(caseViewUpdate).add(caseViewPager);
         showCaseQueue.show();
+
+
+
+        //GEOCERCAS
+        if (android.os.Build.VERSION.SDK_INT >= 23){
+            requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, Constants.PERMISSION_REQUEST_CODE);
+        }
+
+        if(this.getPreferences(Context.MODE_PRIVATE).getBoolean(Constants.IS_GEOFENCE_ACTIVE, Constants.IS_GEOFENCE)) {
+            googleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(LocationServices.API)
+                    .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                        @Override
+                        public void onConnected(@Nullable Bundle bundle) {
+                            Log.d(TAG, "Connected to GoogleApiClient");
+                            starGeofenceMonitoring(getLocations());
+                        }
+
+                        @Override
+                        public void onConnectionSuspended(int i) {
+                            Log.d(TAG, "Suspended connection to GoogleApiClient");
+                        }
+                    })
+                    .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                        @Override
+                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                            Log.d(TAG, "Failed to connect to GoogleApiClient - " + connectionResult.getErrorMessage());
+                        }
+                    })
+                    .build();
+        }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
     private void swipeToast() {
@@ -177,4 +210,39 @@ public class WitcomPagerActivity extends WitcomBaseActivity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "onResume called");
+        super.onResume();
+
+        //GEOFENCE
+        if(this.getPreferences(Context.MODE_PRIVATE).getBoolean(Constants.IS_GEOFENCE_ACTIVE, Constants.IS_GEOFENCE)) {
+            int response = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+            if(response != ConnectionResult.SUCCESS) {
+                Log.d(TAG, "Google Play Services not available");
+                GoogleApiAvailability.getInstance().getErrorDialog(this, response, 1).show();
+            } else {
+                Log.d(TAG, "Google Play Services available - no action is required");
+            }
+        }
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    }
+
+    @Override
+    protected void onStart() {
+        Log.d(TAG, "onStart called");
+        super.onStart();
+        if(this.getPreferences(Context.MODE_PRIVATE).getBoolean(Constants.IS_GEOFENCE_ACTIVE, Constants.IS_GEOFENCE)) {
+            googleApiClient.reconnect();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "onStop called");
+        super.onStop();
+        //googleApiClient.disconnect();
+    }
+
 }
