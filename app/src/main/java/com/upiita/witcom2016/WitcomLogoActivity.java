@@ -38,6 +38,8 @@ import com.upiita.witcom2016.rate.RateActivity;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
+
+
 public class WitcomLogoActivity extends AppCompatActivity {
 
     public static String URL_BASE = "https://host-test-b1ab8.firebaseapp.com";
@@ -102,7 +104,7 @@ public class WitcomLogoActivity extends AppCompatActivity {
                     }
                 })
                 .build();
-
+        starGeofenceMonitoring();
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -147,7 +149,7 @@ public class WitcomLogoActivity extends AppCompatActivity {
     protected void onStop() {
         Log.d(TAG, "onStop called");
         super.onStop();
-        googleApiClient.disconnect();
+        //googleApiClient.disconnect();
     }
 
     @Override
@@ -178,12 +180,15 @@ public class WitcomLogoActivity extends AppCompatActivity {
 
     private void starGeofenceMonitoring() {
         Log.d(TAG, "startMonitoring called");
+
         try {
             //googleApiClient.connect();
+            ArrayList<Coordinate> coordinates;
+
 
             Geofence geofence = new Geofence.Builder()
                     .setRequestId(GEOFENCE_ID)
-                    .setCircularRegion(33, -84, 100)
+                    .setCircularRegion(19.494886, -99.119906, 1000)
                     .setExpirationDuration(Geofence.NEVER_EXPIRE)
                     .setNotificationResponsiveness(1000)
                     .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)

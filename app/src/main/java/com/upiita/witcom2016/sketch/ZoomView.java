@@ -1048,7 +1048,7 @@ public class ZoomView extends ImageView {
      * @param y y-coordinate of touch event
      * @param clipToBitmap Touch event may occur within view, but outside image content. True, to clip return value
      * 			to the bounds of the bitmap size.
-     * @return Coordinates of the point touched, in the coordinate system of the original drawable.
+     * @return Coordinate of the point touched, in the coordinate system of the original drawable.
      */
     private PointF transformCoordTouchToBitmap(float x, float y, boolean clipToBitmap) {
         matrix.getValues(m);
@@ -1072,7 +1072,7 @@ public class ZoomView extends ImageView {
      * drawable's coordinate system to the view's coordinate system.
      * @param bx x-coordinate in original bitmap coordinate system
      * @param by y-coordinate in original bitmap coordinate system
-     * @return Coordinates of the point in the view's coordinate system.
+     * @return Coordinate of the point in the view's coordinate system.
      */
     private PointF transformCoordBitmapToTouch(float bx, float by) {
         matrix.getValues(m);
