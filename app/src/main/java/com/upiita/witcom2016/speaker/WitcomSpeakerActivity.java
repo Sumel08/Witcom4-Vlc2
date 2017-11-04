@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -35,7 +36,7 @@ public class WitcomSpeakerActivity extends AppCompatActivity {
 
     public RecyclerView recycler;
     private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager lManager;
+    public RecyclerView.LayoutManager lManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,26 +188,47 @@ public class WitcomSpeakerActivity extends AppCompatActivity {
         class SpeakerViewHolder extends RecyclerView.ViewHolder implements
                 View.OnClickListener {
 
-            public View mView;
             public ImageView image;
             public TextView name;
             public TextView from;
+            public ImageView imageExpanded;
+            public TextView nameExpanded;
+            public TextView fromExpanded;
+            public TextView resume;
             //public LinearLayout details;
             public Speaker speaker;
 
+            public LinearLayout normalContainer;
+            public LinearLayout expandedContainer;
+
+
             public SpeakerViewHolder(View v) {
                 super(v);
-                mView = v;
                 image = (ImageView) v.findViewById(R.id.image);
                 name = (TextView) v.findViewById(R.id.name);
                 from = (TextView) v.findViewById(R.id.from);
+                imageExpanded = (ImageView) v.findViewById(R.id.imageExpanded);
+                nameExpanded = (TextView) v.findViewById(R.id.nameExpanded);
+                fromExpanded = (TextView) v.findViewById(R.id.fromExpanded);
+                resume = (TextView) v.findViewById(R.id.resume);
+
+                normalContainer = (LinearLayout) v.findViewById(R.id.normalContainer);
+                expandedContainer = (LinearLayout) v.findViewById(R.id.expandedContainer);
+
+                itemView.setOnClickListener(this);
                 //details = (LinearLayout) v.findViewById(R.id.cv_details);
             }
 
             @Override
             public void onClick(View v) {
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, 300, 1f);
-                from.setLayoutParams(lp);
+                /*LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, 300, 1f);
+                from.setLayoutParams(lp);*/
+                items.get(getAdapterPosition()).setExpanded(!items.get(getAdapterPosition()).isExpanded());
+                notifyItemChanged(getAdapterPosition());
+                //recycler.smoothScrollToPosition(getAdapterPosition());
+                if(items.get(getAdapterPosition()).isExpanded()) {
+                    ((LinearLayoutManager) lManager).scrollToPositionWithOffset(getAdapterPosition(), 0);
+                }
             }
 
         }
@@ -222,36 +244,47 @@ public class WitcomSpeakerActivity extends AppCompatActivity {
         }
 
         @Override
-        public SpeakerViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        public SpeakerViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View v = LayoutInflater.from(viewGroup.getContext())
-                    .inflate(R.layout.speaker_card, viewGroup, false);
+                        .inflate(R.layout.speaker_card, viewGroup, false);
             return new SpeakerViewHolder(v);
         }
 
         @Override
-        public void onBindViewHolder(final SpeakerViewHolder viewHolder, int i) {
+        public void onBindViewHolder(SpeakerViewHolder viewHolder, int i) {
 
             SQLiteDatabase db = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
             Cursor fila = db.rawQuery("SELECT * FROM images WHERE id = '" + items.get(i).getPhoto() + "'", null);
+            Bitmap bitmap = null;
             if (fila.moveToFirst()) {
                 do {
-                    viewHolder.image.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(fila.getBlob(1))));
+                    bitmap = BitmapFactory.decodeStream(new ByteArrayInputStream(fila.getBlob(1)));
                 } while (fila.moveToNext());
             }
 
             fila.close();
             db.close();
 
-            viewHolder.name.setText(items.get(i).getName());
-            viewHolder.from.setText(items.get(i).getConference());
-            viewHolder.speaker = items.get(i);
+            if(items.get(i).isExpanded()) {
+                viewHolder.expandedContainer.setVisibility(View.VISIBLE);
+                viewHolder.normalContainer.setVisibility(View.GONE);
+                viewHolder.nameExpanded.setText(items.get(i).getName());
+                viewHolder.fromExpanded.setText(items.get(i).getConference());
+                viewHolder.resume.setText(items.get(i).getResume());
+                viewHolder.imageExpanded.setImageBitmap(bitmap);
+            }
+            else {
+                viewHolder.expandedContainer.setVisibility(View.GONE);
+                viewHolder.normalContainer.setVisibility(View.VISIBLE);
+                viewHolder.name.setText(items.get(i).getName());
+                viewHolder.from.setText(items.get(i).getConference());
+                viewHolder.image.setImageBitmap(bitmap);
+            }
 
-            viewHolder.mView.findViewById(R.id.speaker_card_card).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(context, viewHolder.speaker.getConference(), Toast.LENGTH_LONG).show();
-                }
-            });
+
+            //viewHolder.speaker = items.get(i);
+
+
 
             /*viewHolder.mView.findViewById(R.id.speaker_card_card).setOnLongClickListener(new View.OnLongClickListener() {
                 @Override

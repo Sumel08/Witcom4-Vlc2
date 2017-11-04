@@ -16,6 +16,8 @@ public class Speaker {
     private String phone;
     private String provenance;
 
+    private boolean expanded;
+
     public Speaker(String image, String name, String from, String conference, String surname, String birthdate, String photo, String resume, String email, String phone, String provenance) {
         this.image = image;
         this.name = name;
@@ -116,5 +118,13 @@ public class Speaker {
 
     public void setProvenance(String provenance) {
         this.provenance = provenance;
+    }
+
+    public boolean isExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
     }
 }
