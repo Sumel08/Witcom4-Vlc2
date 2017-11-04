@@ -26,26 +26,30 @@
         android:layout_height="wrap_content"
         android:text="@string/address"
         android:padding="16dp"
-        style="?android:attr/textAppearanceMedium"/>
+        style="?android:attr/textAppearanceMedium"
+        android:visibility="invisible"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:id="@+id/place_detail_address"/>
+        android:id="@+id/place_detail_address"
+        android:visibility="invisible"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/schedule"
         android:padding="16dp"
-        style="?android:attr/textAppearanceMedium"/>
+        style="?android:attr/textAppearanceMedium"
+        android:visibility="invisible"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:id="@+id/place_detail_schedule"/>
+        android:id="@+id/place_detail_schedule"
+        android:visibility="invisible"/>
 
 </LinearLayout>
 

@@ -40,7 +40,7 @@
                     android:layout_height="match_parent"
                     android:id="@+id/sponsorsRecycler"/>
 
-                <TableLayout
+                <!--<TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:stretchColumns="0,1,2">
@@ -79,7 +79,7 @@
                             android:layout_marginBottom="2dp"/>
 
                     </TableRow>
-                </TableLayout>
+                </TableLayout>-->
 
             </LinearLayout>
 
@@ -103,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/custWhite"
                     android:gravity="center"
-                    android:text="This is WITCOM 2016
+                    android:text="This is WITCOM 2017
 International Congress on Telematics, Computing and Communications" />
                 <ImageView
                     android:layout_width="140dp"
@@ -117,7 +117,7 @@ International Congress on Telematics, Computing and Communications" />
                 android:background="@color/colorPrimaryDark"
                 android:textColor="@color/custWhite"
                 android:gravity="center"
-                android:text="This edition WITCOM 2016 will be celebrated in Silao, Guanajuato, with the support of UPIIG-IPN. WITCOM aims bringing together researchers, developers, users, entrepreneurs and practitioners to discuss and present trend topics and novelty systems based on {telematics}, {computing} and {communications}, fostering interdisciplinary discussions and research in all aspects of Telematics."/>
+                android:text="WITCOM aims bringing together researchers, developers, users, entrepreneurs and practitioners to discuss and present trend topics and novelty systems based on {telematics}, {computing} and {communications}, fostering interdisciplinary discussions and research in all aspects of Telematics."/>
 
 
             <LinearLayout
@@ -170,7 +170,7 @@ International Congress on Telematics, Computing and Communications" />
                     android:textIsSelectable="true"
                     android:layout_marginStart="48dp"/>
 
-                <TextView
+                <!--<TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/email"
@@ -183,11 +183,11 @@ International Congress on Telematics, Computing and Communications" />
                     android:textSize="12sp"
                     android:textColor="@color/custWhite"
                     android:textIsSelectable="true"
-                    android:layout_marginStart="48dp"/>
+                    android:layout_marginStart="48dp"/>-->
 
             </LinearLayout>
 
-            <LinearLayout
+            <!--<LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -270,7 +270,7 @@ International Congress on Telematics, Computing and Communications" />
                     </TableRow>
                 </TableLayout>
 
-            </LinearLayout>
+            </LinearLayout>-->
 
             <LinearLayout
                 android:layout_width="match_parent"

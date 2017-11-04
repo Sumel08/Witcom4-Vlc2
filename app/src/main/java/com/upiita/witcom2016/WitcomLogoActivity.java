@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.upiita.witcom2016.dataBaseHelper.WitcomDataBase;
 import com.upiita.witcom2016.events.EventActivity;
 import com.upiita.witcom2016.pager.WitcomPagerActivity;
@@ -42,6 +43,7 @@ public class WitcomLogoActivity extends AppCompatActivity {
         Cursor fila = db.rawQuery("SELECT * FROM event", null);
         currentEvent = fila.getCount()>0;
         if (fila.moveToFirst()) {
+            FirebaseMessaging.getInstance().subscribeToTopic(fila.getString(1));
             do {
                 Cursor fila2 = db.rawQuery("SELECT image FROM images where id=" + fila.getString(4), null);
                 if(fila2.moveToFirst())

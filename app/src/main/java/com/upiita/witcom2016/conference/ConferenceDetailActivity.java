@@ -1,6 +1,9 @@
 package com.upiita.witcom2016.conference;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.design.widget.FloatingActionButton;
@@ -9,10 +12,13 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.upiita.witcom2016.R;
 import com.upiita.witcom2016.conference.dummy.DummyContent;
+import com.upiita.witcom2016.dataBaseHelper.WitcomDataBase;
 
+import java.io.ByteArrayInputStream;
 import java.util.Calendar;
 
 /**
@@ -45,6 +51,15 @@ public class ConferenceDetailActivity extends AppCompatActivity {
                 addCalendarEvent();
             }
         });
+
+        ImageView activityImage = (ImageView) findViewById(R.id.conference_image_detail);
+        SQLiteDatabase bd = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
+        Cursor fila = bd.rawQuery("SELECT image FROM images WHERE id = '" + DummyContent.ITEM_MAP.get(getIntent().getStringExtra(ConferenceDetailFragment.ARG_ITEM_ID)).placeImage +"'", null);
+        if (fila.moveToFirst()) {
+            activityImage.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(fila.getBlob(0))));
+        }
+        fila.close();
+        bd.close();
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
