@@ -141,15 +141,23 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_new_event"
             android:theme="@style/FullscreenTheme" />
-        <!--<activity android:name=".workshop.WitcomActivitiesActivity"></activity>-->
+        <!-- <activity android:name=".workshop.WitcomActivitiesActivity"></activity> -->
         <activity
             android:name=".workshop.WitcomActivitiesActivity"
             android:label="@string/workshops"
             android:parentActivityName=".pager.WitcomPagerActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <service android:name=".GeofenceService" android:exported="true" android:enabled="true"/>
+        <service
+            android:name=".GeofenceService"
+            android:enabled="true"
+            android:exported="true" />
 
+        <activity
+            android:name=".PlaceNotifActivity"
+            android:label="@string/title_place_detail"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

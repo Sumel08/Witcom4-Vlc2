@@ -580,6 +580,7 @@ public class WitcomBaseActivity extends AppCompatActivity {
         try {
             for(RegionGeofence region: coordinates) {
                 Log.d("DB", "NAME: " + region.name);
+                Log.d("DB", "ID: " + region.id);
                 geofence = new Geofence.Builder()
                         .setRequestId(region.id)
                         .setCircularRegion(region.latitude, region.longitude, region.radius)
@@ -594,18 +595,6 @@ public class WitcomBaseActivity extends AppCompatActivity {
                     .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
                     .addGeofences(geofenceList)
                     .build();
-
-            /*Geofence geofence = new Geofence.Builder()
-                    .setRequestId(GEOFENCE_ID)
-                    .setCircularRegion(19.494886, -99.119906, Constants.GEOFENCE_TOURISM_RADIUS)
-                    .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                    .setNotificationResponsiveness(Constants.GEOFENCE_NOTIFICATION_RESPONSIVENESS)
-                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
-                    .build();
-            GeofencingRequest geofencingRequest = new GeofencingRequest.Builder()
-                    .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
-                    .addGeofence(geofence)
-                    .build();*/
 
             Intent intent = new Intent(this, GeofenceService.class);
             PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -672,7 +661,7 @@ public class WitcomBaseActivity extends AppCompatActivity {
         cur.close();
 
         bd.close();
-
+        /*
         regionGeofence = new RegionGeofence("Indios Verdes", "Indios Verdes", 19.494739, -99.122002,1000);
         coordinates.add(regionGeofence);
 
@@ -694,6 +683,9 @@ public class WitcomBaseActivity extends AppCompatActivity {
         regionGeofence = new RegionGeofence("Bancomer", "Bancomer", 19.501102, -99.131321, 100);
         coordinates.add(regionGeofence);
 
+        regionGeofence = new RegionGeofence("15", "Casa", 19.640255, -99.051399, 1000);
+        coordinates.add(regionGeofence);
+        */
         return coordinates;
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

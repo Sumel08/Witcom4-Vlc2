@@ -2,6 +2,7 @@ package com.upiita.witcom2016;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,6 +15,9 @@ import android.util.Log;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 import com.upiita.witcom2016.dataBaseHelper.WitcomDataBase;
+import com.upiita.witcom2016.rate.RateActivity;
+import com.upiita.witcom2016.tourism.PlaceDetailActivity;
+import com.upiita.witcom2016.tourism.PlaceDetailFragment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,8 +49,6 @@ public class GeofenceService extends IntentService {
             String requestId = geofence.getRequestId();
 
             SQLiteDatabase bd = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
-            ArrayList<RegionGeofence> coordinates =  new ArrayList<RegionGeofence>();
-
             Cursor cur = bd.rawQuery("SELECT * FROM place pl INNER JOIN event ev ON pl.id LIKE ev.place", null);
             if (cur.moveToFirst()) {
                 do {
@@ -69,81 +71,55 @@ public class GeofenceService extends IntentService {
     }
 
     private void handleEvent(String requestId, boolean isEnter) {
-
-
-
-        if(requestId == witcomId) {
-            if(isEnter) {
-
-            } else {
-
-            }
-
-        } else {
-
-        }
-
-
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-        buildNotification(mBuilder, requestId);
+        buildNotification(mBuilder, requestId, isEnter);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0 /* ID of notification */, mBuilder.build());
     }
 
-    private void buildNotification(NotificationCompat.Builder mBuilder, String geofence) {
-        mBuilder.setSmallIcon(R.drawable.witcomlogo);
+    private void buildNotification(NotificationCompat.Builder mBuilder, String geofence, boolean isEnter) {
 
-        //if (activity != null && details != null) {
+        String title = geofence;
+        String message = geofence;
 
-            /*SQLiteDatabase bd = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
-            Cursor fila = bd.rawQuery("SELECT * FROM activities WHERE id = '" + activity + "'", null);
-            if (fila.moveToFirst()) {
-                Cursor fila2 = bd.rawQuery("SELECT * FROM " + fila.getString(3) + " WHERE id = '" + details + "'", null);
-            }*/
-
-
-        /*} else if (conference != null) {
-
-            SQLiteDatabase bd = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
-            Cursor fila = bd.rawQuery("SELECT * FROM activity WHERE id = '" + conference + "'", null);
-            if (fila.moveToFirst()) {
-
-                Cursor activitPeopleCursor = bd.rawQuery("SELECT * FROM activity_people WHERE activity = " + conference, null);
-                if (activitPeopleCursor.moveToFirst()) {
-                    Cursor peopleCursor = bd.rawQuery("SELECT photo FROM people WHERE id = " + activitPeopleCursor.getString(2), null);
-                    if (peopleCursor.moveToFirst()) {
-                        Cursor fila2 = bd.rawQuery("SELECT image FROM images WHERE id = " + peopleCursor.getString(0), null);
-                        if (fila2.moveToFirst()) {
-                            mBuilder.setLargeIcon(BitmapFactory.decodeStream(new ByteArrayInputStream(fila2.getBlob(0))));
-                        }
-                        fila2.close();
-                    }
-                    peopleCursor.close();
-                }
-                activitPeopleCursor.close();
-                */
-                mBuilder.setContentTitle(geofence)
-                        .setContentText("Visita el lugar:")
-                        .setWhen(System.currentTimeMillis())
-                        .setAutoCancel(true);
-            /*}
-            fila.close();
-            bd.close();
-
-            Intent notificationIntent = new Intent(getApplicationContext(), RateActivity.class);
-            notificationIntent.putExtra("conference", conference);
-            PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(),
-                    0, notificationIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT);
-
-            mBuilder.setContentIntent(contentIntent);
+        if(geofence == witcomId) {
+            title = "WITCOM 2017";
+            if(isEnter) {
+                message = "Te da la bienvenida, disfruta el evento";
+            } else {
+                message = "Agradece tu visita, te esperamos la próxima.";
+            }
 
         } else {
-            mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.witcomlogo))
-                    .setContentTitle(remoteMessage.getNotification().getTitle())
-                    .setContentText(remoteMessage.getNotification().getBody());
-        }*/
+            message = "Se encuentra cerca de ti, click para info.";
+            SQLiteDatabase bd = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
+            Cursor cur = bd.rawQuery("SELECT * FROM place WHERE ID = '" + geofence + "'", null);
+            if (cur.moveToFirst()) {
+                do {
+                    title = cur.getString(1);
+                } while (cur.moveToNext());
+            }
+            cur.close();
+            bd.close();
+        }
 
+
+        mBuilder.setContentTitle(title)
+                .setSmallIcon(R.drawable.witcomlogo)
+                .setContentText(message)
+                .setWhen(System.currentTimeMillis())
+                .setAutoCancel(true);
+
+
+        if(geofence != witcomId) {
+            Intent notificationIntent = new Intent(getApplicationContext(), PlaceNotifActivity.class);
+            notificationIntent.putExtra("place_id", geofence);
+            PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(),
+                    0,
+                    notificationIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT);
+            mBuilder.setContentIntent(contentIntent);
+        }
         mBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setVibrate(new long[] { 500, 500, 500, 500, 500 })

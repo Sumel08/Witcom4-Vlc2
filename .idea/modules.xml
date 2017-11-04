@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://D:\Proyectos\WITCOM2017\Witcom4-Vlc2\Witcom4 Vlc2.iml" filepath="D:\Proyectos\WITCOM2017\Witcom4-Vlc2\Witcom4 Vlc2.iml" />
       <module fileurl="file://$PROJECT_DIR$/Witcom4-Vlc2.iml" filepath="$PROJECT_DIR$/Witcom4-Vlc2.iml" />
-      <module fileurl="file://C:\Users\Edgar\Desktop\Witcom\Witcom4-Vlc2\Witcom4-Vlc2.iml" filepath="C:\Users\Edgar\Desktop\Witcom\Witcom4-Vlc2\Witcom4-Vlc2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\Edgar\Desktop\Witcom\Witcom4-Vlc2\app\app.iml" filepath="C:\Users\Edgar\Desktop\Witcom\Witcom4-Vlc2\app\app.iml" />
     </modules>
   </component>
 </project>

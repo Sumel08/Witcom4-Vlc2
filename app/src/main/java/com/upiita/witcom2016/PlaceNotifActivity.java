@@ -1,5 +1,6 @@
-package com.upiita.witcom2016.tourism;
+package com.upiita.witcom2016;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,51 +8,124 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.upiita.witcom2016.R;
-import com.upiita.witcom2016.WitcomLogoActivity;
-import com.upiita.witcom2016.WitcomStreetViewActivity;
 import com.upiita.witcom2016.dataBaseHelper.WitcomDataBase;
+import com.upiita.witcom2016.tourism.PlaceDetailActivity;
+import com.upiita.witcom2016.tourism.PlaceDetailFragment;
+import com.upiita.witcom2016.tourism.PlaceListActivity;
 import com.upiita.witcom2016.tourism.place.PlaceContent;
 
 import java.io.ByteArrayInputStream;
 
-/**
- * An activity representing a single Place detail screen. This
- * activity is only used narrow width devices. On tablet-size devices,
- * item details are presented side-by-side with a list of items
- * in a {@link PlaceListActivity}.
- */
-public class PlaceDetailActivity extends AppCompatActivity {
+public class PlaceNotifActivity extends AppCompatActivity {
+
+    private String name;
+    private String description;
+    private String longitude;
+    private String latitude;
+    private String altitude;
+    private String indication;
+    private String additional_info;
+    private String website;
+    private String email;
+    private String telephone;
+    private String image;
+    private String place_category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_place_detail);
+        setContentView(R.layout.activity_place_notif);
+
+        Intent notifIntent = getIntent();
+        String geofence = notifIntent.getExtras().getString("place_id");
+
+        ImageView iv = (ImageView) findViewById(R.id.place_detail_image);
+        SQLiteDatabase bd = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
+        Cursor fila = bd.rawQuery("SELECT im.image FROM images im INNER JOIN place pl ON im.id = pl.image WHERE pl.id = '" + geofence + "'", null);
+        if (fila.moveToFirst()) {
+            iv.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(fila.getBlob(0))));
+        }
+        fila.close();
+        bd.close();
+
+        bd = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
+        fila = bd.rawQuery("SELECT * FROM place WHERE id = '" + geofence + "'", null);
+        if (fila.moveToFirst()) {
+            name = fila.getString(1);
+            description = fila.getString(2);
+            longitude = fila.getString(3);
+            latitude = fila.getString(4);
+            altitude = fila.getString(5);
+            indication = fila.getString(6);
+            additional_info = fila.getString(7);
+            website = fila.getString(8);
+            email = fila.getString(9);
+            telephone = fila.getString(10);
+            image = fila.getString(11);
+            place_category = fila.getString(12);
+        }
+        fila.close();
+        bd.close();
+
+        Log.d("DETAIL", "name: " + name);
+        Log.d("DETAIL", "description: " + description);
+        Log.d("DETAIL", "longitude: " + longitude);
+        Log.d("DETAIL", "latitude: " + latitude);
+        Log.d("DETAIL", "altitude: " + altitude);
+        Log.d("DETAIL", "indication: " + indication);
+        Log.d("DETAIL", "additional_info: " + additional_info);
+        Log.d("DETAIL", "website: " + website);
+        Log.d("DETAIL", "email: " + email);
+        Log.d("DETAIL", "telephone: " + telephone);
+        Log.d("DETAIL", "image: " + image);
+        Log.d("DETAIL", "place_category: " + place_category);
+
+        TextView place_detail = (TextView)findViewById(R.id.place_detail);
+        TextView place_address = (TextView)findViewById(R.id.place_detail_address);
+        TextView place_schedule = (TextView)findViewById(R.id.place_detail_schedule);
+
+        place_detail.setText(description);
+        place_address.setText(indication);
+        place_schedule.setText(additional_info);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
+
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        if (appBarLayout != null) {
+            appBarLayout.setTitle(name);
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(PlaceDetailActivity.this, WitcomStreetViewActivity.class);
-                intent.putExtra("latitude", PlaceContent.ITEM_MAP.get(getIntent().getStringExtra(PlaceDetailFragment.ARG_ITEM_ID)).latitude);
-                intent.putExtra("longitude", PlaceContent.ITEM_MAP.get(getIntent().getStringExtra(PlaceDetailFragment.ARG_ITEM_ID)).longitude);
+                Intent intent = new Intent(PlaceNotifActivity.this, WitcomStreetViewActivity.class);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
 
                 startActivity(intent);
             }
@@ -64,7 +138,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
                 LayoutInflater inflater = (LayoutInflater)getSystemService( Context.LAYOUT_INFLATER_SERVICE );
                 final View layout = inflater.inflate(R.layout.navigationmap, null);
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(PlaceDetailActivity.this);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(PlaceNotifActivity.this);
                 alertDialogBuilder
                         .setTitle(getString(R.string.navigation))
                         .setMessage(getString(R.string.how_get))
@@ -78,21 +152,21 @@ public class PlaceDetailActivity extends AppCompatActivity {
                                 RadioButton rbw = (RadioButton)layout.findViewById(R.id.walk);
 
                                 if(rbc.isChecked()) {
-                                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + PlaceContent.ITEM_MAP.get(getIntent().getStringExtra(PlaceDetailFragment.ARG_ITEM_ID)).latitude + "," + PlaceContent.ITEM_MAP.get(getIntent().getStringExtra(PlaceDetailFragment.ARG_ITEM_ID)).longitude);
+                                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude + "," + longitude);
                                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                                     mapIntent.setPackage("com.google.android.apps.maps");
                                     startActivity(mapIntent);
                                     dialog.cancel();
                                 }
                                 else if(rbb.isChecked()) {
-                                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + PlaceContent.ITEM_MAP.get(getIntent().getStringExtra(PlaceDetailFragment.ARG_ITEM_ID)).latitude + "," + PlaceContent.ITEM_MAP.get(getIntent().getStringExtra(PlaceDetailFragment.ARG_ITEM_ID)).longitude+ "&mode=b");
+                                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude + "," + longitude+ "&mode=b");
                                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                                     mapIntent.setPackage("com.google.android.apps.maps");
                                     startActivity(mapIntent);
                                     dialog.cancel();
                                 }
                                 else if(rbw.isChecked()) {
-                                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + PlaceContent.ITEM_MAP.get(getIntent().getStringExtra(PlaceDetailFragment.ARG_ITEM_ID)).latitude + "," + PlaceContent.ITEM_MAP.get(getIntent().getStringExtra(PlaceDetailFragment.ARG_ITEM_ID)).longitude + "mode=w");
+                                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude + "," + longitude + "mode=w");
                                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                                     mapIntent.setPackage("com.google.android.apps.maps");
                                     startActivity(mapIntent);
@@ -111,42 +185,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
             }
         });
 
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        ImageView iv = (ImageView) findViewById(R.id.place_detail_image);
-        SQLiteDatabase bd = new WitcomDataBase(getApplicationContext()).getReadableDatabase();
-        Cursor fila = bd.rawQuery("SELECT image FROM images WHERE id = '" + PlaceContent.ITEM_MAP.get(getIntent().getStringExtra(PlaceDetailFragment.ARG_ITEM_ID)).id_image +"'", null);
-        if (fila.moveToFirst()) {
-            iv.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(fila.getBlob(0))));
-        }
-        fila.close();
-        bd.close();
-
-        // savedInstanceState is non-null when there is fragment state
-        // saved from previous configurations of this activity
-        // (e.g. when rotating the screen from portrait to landscape).
-        // In this case, the fragment will automatically be re-added
-        // to its container so we don't need to manually add it.
-        // For more information, see the Fragments API guide at:
-        //
-        // http://developer.android.com/guide/components/fragments.html
-        //
-        if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(PlaceDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(PlaceDetailFragment.ARG_ITEM_ID));
-            PlaceDetailFragment fragment = new PlaceDetailFragment();
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.place_detail_container, fragment)
-                    .commit();
-        }
     }
 
     @Override
