@@ -31,11 +31,12 @@
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:scaleType="centerCrop"
                 android:src="@drawable/witcomlogo"
-                android:paddingBottom="100dp"/>
+                android:id="@+id/conference_image_detail"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

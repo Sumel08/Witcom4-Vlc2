@@ -33,7 +33,7 @@ public class DummyContent {
     public DummyContent (Context context) {
         SQLiteDatabase bd = new WitcomDataBase(context).getReadableDatabase();
 
-        String id = "", title = "", from = "", about = "", date = "", end_date = "", time = "", end_time = "", type = "", image = "", placeName = "";
+        String id = "", title = "", from = "", about = "", date = "", end_date = "", time = "", end_time = "", type = "", image = "", placeName = "", placeImage = "";
         ArrayList<String> speaker = new ArrayList<>();
         Cursor fila = bd.rawQuery("SELECT * FROM activity", null);
 
@@ -73,14 +73,15 @@ public class DummyContent {
                 }
                 fila3.close();
 
-                Cursor placeCursor = bd.rawQuery("SELECT name FROM place WHERE id = " + fila.getString(9), null);
+                Cursor placeCursor = bd.rawQuery("SELECT * FROM place WHERE id = " + fila.getString(9), null);
 
                 if (placeCursor.moveToFirst()) {
-                    placeName = placeCursor.getString(0);
+                    placeName = placeCursor.getString(1);
+                    placeImage = placeCursor.getString(11);
                 }
                 placeCursor.close();
 
-                addItem(new DummyItem(id, title, speaker, from, about, date, end_date, time, end_time, type, image, placeName));
+                addItem(new DummyItem(id, title, speaker, from, about, date, end_date, time, end_time, type, image, placeName, placeImage));
 
             }
             while (fila.moveToNext());
@@ -111,8 +112,9 @@ public class DummyContent {
         public final String type;
         public final String image;
         public final String placeName;
+        public final String placeImage;
 
-        public DummyItem(String id, String title, ArrayList<String> speaker, String from, String about, String date, String end_date, String time, String end_time ,String type, String image, String placeName) {
+        public DummyItem(String id, String title, ArrayList<String> speaker, String from, String about, String date, String end_date, String time, String end_time ,String type, String image, String placeName, String placeImage) {
             this.id = id;
             this.title = title;
             this.speaker = speaker;
@@ -125,6 +127,7 @@ public class DummyContent {
             this.type = type;
             this.image = image;
             this.placeName = placeName;
+            this.placeImage = placeImage;
         }
 
         @Override

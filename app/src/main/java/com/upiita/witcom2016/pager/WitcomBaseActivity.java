@@ -207,6 +207,7 @@ public class WitcomBaseActivity extends AppCompatActivity {
         getImages();
 
         for (final String table: dataBase.keySet()) {
+            Controller.getInstance().getRequestQueue().getCache().invalidate(URL_BASE + getURLS.get(table), true);
             JsonArrayRequest request = new JsonArrayRequest(URL_BASE + getURLS.get(table), new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
@@ -253,6 +254,7 @@ public class WitcomBaseActivity extends AppCompatActivity {
     }
 
     private void getImages () {
+        Controller.getInstance().getRequestQueue().getCache().invalidate(URL_BASE + Constants.GET_IMAGES, true);
         JsonArrayRequest request = new JsonArrayRequest(URL_BASE + Constants.GET_IMAGES, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -452,6 +454,7 @@ public class WitcomBaseActivity extends AppCompatActivity {
         }
 
         private void getImage(final String id, final String imageUrl, final int index){
+            Controller.getInstance().getRequestQueue().getCache().invalidate(imageUrl, true);
             ImageRequest request = new ImageRequest(imageUrl,
                     new Response.Listener<Bitmap>() {
                         @Override

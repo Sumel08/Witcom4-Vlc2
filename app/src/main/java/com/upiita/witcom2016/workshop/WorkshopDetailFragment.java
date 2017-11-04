@@ -55,7 +55,7 @@ public class WorkshopDetailFragment extends Fragment {
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.time);
+                appBarLayout.setTitle(mItem.place);
             }
         }
     }
@@ -81,8 +81,13 @@ public class WorkshopDetailFragment extends Fragment {
                     "<font color="+dark+">"+mItem.title+"</font>"+
                     "<font color="+accent+"> /&gt;</font>"));
 
+            String speakers = "<br>";
+            for (String speaker: mItem.monitor) {
+                speakers += "* " + speaker + "<br>";
+            }
+
             ((TextView)rootView.findViewById(R.id.monitor)).setText(Html.fromHtml("<font color="+accent+">&lt;" + getString(R.string.monitor) + " </font>" +
-                    "<font color="+dark+">"+mItem.monitor.toString()+"</font>"+
+                    "<font color="+dark+">"+speakers+"</font>"+
                     "<font color="+accent+"> /&gt;</font>"));
 
             ((TextView)rootView.findViewById(R.id.about)).setText(Html.fromHtml("<font color="+accent+">&lt;" + getString(R.string.about) + "&gt;</font>"));
