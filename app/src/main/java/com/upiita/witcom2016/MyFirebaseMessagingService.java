@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +33,34 @@ import static android.content.ContentValues.TAG;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
+    public  MyFirebaseMessagingService() {
+        super();
+    }
+
+    @Override
+    public void handleIntent(Intent intent) {
+        super.handleIntent(intent);
+        Bundle bundle = intent.getExtras();
+
+        for (String key: bundle.keySet()) {
+            Log.d("BUNDLEKEY", key);
+//            Log.d("BUNDLEVALUE", bundle.getString(key));
+        }
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.witcomlogo))
+                .setContentTitle("Lemus")
+                .setContentText("nuevo");
+        mBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setVibrate(new long[] { 500, 500, 500, 500, 500 })
+                .setSound(Uri.fromFile(new File("/system/media/audio/notifications/Adara.ogg")))
+                .setCategory(NotificationCompat.CATEGORY_REMINDER);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1 /* ID of notification */, mBuilder.build());
+
+    }
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         // TODO(developer): Handle FCM messages here.
@@ -47,6 +76,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0 /* ID of notification */, mBuilder.build());
+
+        super.onMessageReceived(remoteMessage);
 
     }
 

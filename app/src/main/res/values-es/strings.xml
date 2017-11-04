@@ -94,11 +94,11 @@
     <string name="sponsor">Patrocinadores y Acerca de</string>
     <string name="sponsors">{ Patrocinadores }</string>
 
-    <string name="upiig">{ UPIIG-IPN }</string>
+    <string name="upiig">{ CEC IPN, CANCÚN }</string>
     <string name="telephone">Teléfono</string>
     <string name="email">Correo electrónico</string>
-    <string name="witcom_address">UPIIG.-Av. Mineral de Valenciana No. 200 Col. Fracc. Industrial Puerto Interior, C.P. 36275 Silao de la Victoria, Guanajuato México</string>
-    <string name="witcom_telephone">(472) 74 84638 Conmutador: (55) 57 29 6000 Ext. 81301 \nFax: 81450</string>
+    <string name="witcom_address">Blvd. Kukulcán Km. 12.5, Centro Empresarial Cancún Torre "A" Primer Piso,\nZona Hotelera, Cancún, Quintana Roo. C.P. 77500.</string>
+    <string name="witcom_telephone">Tels: +52 (998) 176 8165, \n884 5161, \n884 4879, \n176 8233 y \n176 8175</string>
     <string name="witcom_email">upiig@ipn.mx</string>
 
     <string name="leave_comment">Por favor, deja un comentario</string>
