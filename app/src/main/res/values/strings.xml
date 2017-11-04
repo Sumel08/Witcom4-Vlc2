@@ -104,7 +104,7 @@
 
     <string name="thank_you">Thank you</string>
 
-    <string name="rate_conference">Rate the conference</string>
+    <string name="rate_conference">Tap to rate the conference</string>
 
     <string name="action_add_favourite">Add to Favourites</string>
     <string name="action_play_next">Play Next</string>

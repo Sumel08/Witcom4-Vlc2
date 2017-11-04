@@ -104,7 +104,7 @@
     <string name="leave_comment">Por favor, deja un comentario</string>
     <string name="thank_you">Gracias</string>
 
-    <string name="rate_conference">Califica la conferencia</string>
+    <string name="rate_conference">Selecciona para calificar la conferencia</string>
 
     <string name="action_add_favourite">Add to Favourites</string>
     <string name="action_play_next">Play Next</string>
