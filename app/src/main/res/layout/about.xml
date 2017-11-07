@@ -35,10 +35,22 @@
                     android:layout_height="1dp"
                     android:background="@color/custWhite"/>
 
+                <com.synnapps.carouselview.CarouselView
+                    android:id="@+id/carouselView"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    app:fillColor="#FFFFFFFF"
+                    app:pageColor="#00000000"
+                    app:radius="6dp"
+                    app:slideInterval="1500"
+                    app:strokeColor="#FF777777"
+                    app:strokeWidth="1dp"/>
+
+                <!--
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/sponsorsRecycler"/>
+                    android:id="@+id/sponsorsRecycler"/>-->
 
                 <!--<TableLayout
                     android:layout_width="match_parent"

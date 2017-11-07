@@ -50,6 +50,7 @@ dependencies {
     compile 'com.github.faruktoptas:FancyShowCaseView:1.0.0'
     testCompile 'junit:junit:4.12'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.synnapps:carouselview:0.1.4'
 }
 
 

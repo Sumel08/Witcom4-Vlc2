@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,6 +28,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageListener;
 import com.upiita.witcom2016.R;
 import com.upiita.witcom2016.conference.WitcomProgramActivity;
 import com.upiita.witcom2016.dataBaseHelper.WitcomDataBase;
@@ -333,6 +336,38 @@ public class WitcomFragmentAdapter extends FragmentPagerAdapter implements IconP
                         }
                         sponsorsCursor.close();
 
+
+
+                        final ArrayList<Bitmap> bitmaps = new ArrayList<>();
+                        SQLiteDatabase bd = new WitcomDataBase(getContext()).getReadableDatabase();
+                        for(Sponsor sponsor: sposorList) {
+                            sponsorsCursor = bd.rawQuery("SELECT image FROM images WHERE id = " + sponsor.getImage(), null);
+                            if (sponsorsCursor.moveToFirst()) {
+                                do {
+                                    bitmaps.add(BitmapFactory.decodeStream(new ByteArrayInputStream(sponsorsCursor.getBlob(0))));
+                                } while (sponsorsCursor.moveToNext());
+                            }
+
+
+                        }
+
+                        sponsorsCursor.close();
+                        bd.close();
+
+                        ImageListener imageListener = new ImageListener() {
+                            @Override
+                            public void setImageForPosition(int position, ImageView imageView) {
+                                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                                imageView.setImageBitmap(bitmaps.get(position));
+                            }
+                        };
+
+                        CarouselView carouselView = (CarouselView) alertDialog.findViewById(R.id.carouselView);
+                        carouselView.setPageCount(sposorList.size());
+                        carouselView.setImageListener(imageListener);
+
+
+
                         Cursor chairsCursor = db.rawQuery("SELECT person FROM chairs", null);
                         if (chairsCursor.moveToFirst()) {
                             do {
@@ -358,14 +393,14 @@ public class WitcomFragmentAdapter extends FragmentPagerAdapter implements IconP
                         developerCursor.close();
 
 
-                        RecyclerView sponsors = (RecyclerView) alertDialog.findViewById(R.id.sponsorsRecycler);
+                       /* RecyclerView sponsors = (RecyclerView) alertDialog.findViewById(R.id.sponsorsRecycler);
                         SponsorAdapter adapter = new SponsorAdapter(getContext(), sposorList);
 
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
                         sponsors.setLayoutManager(mLayoutManager);
                         sponsors.setItemAnimator(new DefaultItemAnimator());
                         sponsors.setAdapter(adapter);
-
+                        */
                         /*Chair*/
                         RecyclerView chairs = (RecyclerView) alertDialog.findViewById(R.id.chairsRecycler);
                         ChairAdapter chairAdapter = new ChairAdapter(getContext(), chairList);
