@@ -595,12 +595,14 @@ public class WitcomBaseActivity extends AppCompatActivity {
             }
 
             GeofencingRequest geofencingRequest = new GeofencingRequest.Builder()
-                    .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+                    .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL)
                     .addGeofences(geofenceList)
                     .build();
 
             Intent intent = new Intent(this, GeofenceService.class);
-            PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+
 
             googleApiClient.connect();
 

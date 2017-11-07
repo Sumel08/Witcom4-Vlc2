@@ -26,7 +26,7 @@ public class Constants {
     public static int GEOFENCE_INTERVAL =  10000;
     public static int GEOFENCE_FASTEST_INTERVAL =  5000;
     public static int GEOFENCE_NUM_UPDATES =  5;
-    public static int GEOFENCE_WITCOM_RADIUS =  2000;
+    public static int GEOFENCE_WITCOM_RADIUS =  500;
     public static int GEOFENCE_TOURISM_RADIUS =  1000;
     public static int GEOFENCE_NOTIFICATION_RESPONSIVENESS = 1000;
     public static String IS_GEOFENCE_ACTIVE = "IS_GEOFENCE_ACTIVE";

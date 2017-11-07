@@ -72,32 +72,6 @@
                 android:textIsSelectable="true"
                 tools:context="com.upiita.witcom2016.tourism.PlaceDetailFragment" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/address"
-                android:padding="16dp"
-                style="?android:attr/textAppearanceMedium"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:id="@+id/place_detail_address"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/schedule"
-                android:padding="16dp"
-                style="?android:attr/textAppearanceMedium"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:id="@+id/place_detail_schedule"/>
-
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

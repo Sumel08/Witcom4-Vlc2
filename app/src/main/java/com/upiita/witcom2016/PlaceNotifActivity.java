@@ -97,12 +97,12 @@ public class PlaceNotifActivity extends AppCompatActivity {
         Log.d("DETAIL", "place_category: " + place_category);
 
         TextView place_detail = (TextView)findViewById(R.id.place_detail);
-        TextView place_address = (TextView)findViewById(R.id.place_detail_address);
-        TextView place_schedule = (TextView)findViewById(R.id.place_detail_schedule);
+        //TextView place_address = (TextView)findViewById(R.id.place_detail_address);
+        //TextView place_schedule = (TextView)findViewById(R.id.place_detail_schedule);
 
         place_detail.setText(description);
-        place_address.setText(indication);
-        place_schedule.setText(additional_info);
+        //place_address.setText(indication);
+        //place_schedule.setText(additional_info);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
