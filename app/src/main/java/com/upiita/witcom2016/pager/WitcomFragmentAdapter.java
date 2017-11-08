@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -310,14 +311,23 @@ public class WitcomFragmentAdapter extends FragmentPagerAdapter implements IconP
                         ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
                     }
                     else if(mPager.getCurrentItem() == 7) {
-                        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                        final AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                                 .setView(R.layout.about)
-                                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                /*.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
                                     }
-                                })
+                                })*/
                                 .show();
+
+                        Button button = (Button)alertDialog.findViewById(R.id.dismiss);
+                        button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                alertDialog.dismiss();
+                            }
+                        });
+
                         ArrayList<Sponsor> sposorList = new ArrayList<>();
                         ArrayList<Chair> chairList = new ArrayList<>();
                         ArrayList<Developer> developerList = new ArrayList<>();
@@ -335,8 +345,6 @@ public class WitcomFragmentAdapter extends FragmentPagerAdapter implements IconP
                             } while (sponsorsCursor.moveToNext());
                         }
                         sponsorsCursor.close();
-
-
 
                         final ArrayList<Bitmap> bitmaps = new ArrayList<>();
                         SQLiteDatabase bd = new WitcomDataBase(getContext()).getReadableDatabase();
@@ -365,8 +373,6 @@ public class WitcomFragmentAdapter extends FragmentPagerAdapter implements IconP
                         CarouselView carouselView = (CarouselView) alertDialog.findViewById(R.id.carouselView);
                         carouselView.setPageCount(sposorList.size());
                         carouselView.setImageListener(imageListener);
-
-
 
                         Cursor chairsCursor = db.rawQuery("SELECT person FROM chairs", null);
                         if (chairsCursor.moveToFirst()) {
