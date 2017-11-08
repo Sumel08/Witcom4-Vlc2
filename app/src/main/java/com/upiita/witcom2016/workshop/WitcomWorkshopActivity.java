@@ -109,7 +109,7 @@ public class WitcomWorkshopActivity extends AppCompatActivity {
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
 
-            Intent intent = new Intent(this, WitcomPagerActivity.class);
+            Intent intent = new Intent(this, WitcomActivitiesActivity.class);
             intent.putExtra("page", getIntent().getIntExtra("page", 1));
 
             navigateUpTo(intent);

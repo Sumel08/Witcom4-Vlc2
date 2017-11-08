@@ -119,7 +119,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.upiita.witcom2016.pager.WitcomPagerActivity" />
+                android:value="com.upiita.witcom2016.workshop.WitcomActivitiesActivity" />
         </activity>
         <activity
             android:name="io.vov.vitamio.activity.InitActivity"

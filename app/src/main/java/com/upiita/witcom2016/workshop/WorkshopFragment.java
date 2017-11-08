@@ -94,6 +94,8 @@ public class WorkshopFragment extends Fragment {
                 public void onClick(View v) {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, WorkshopDetailActivity.class);
+                        intent.putExtra("city_id", getActivity().getIntent().getExtras().getInt("city_id", 1));
+                        intent.putExtra("city_name", getActivity().getIntent().getExtras().getString("city_name"));
                         intent.putExtra(WorkshopDetailFragment.ARG_ITEM_ID, holder.mItem.id);
 
                     ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), holder.mImageView, getString(R.string.transition_workshop));
