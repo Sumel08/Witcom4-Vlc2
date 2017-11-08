@@ -118,6 +118,7 @@ public class WitcomActivitiesActivity extends AppCompatActivity {
                     extras.putString("city_name", activities.get(position).getName());
                     Intent mapIntent = new Intent(WitcomActivitiesActivity.this, WitcomWorkshopActivity.class);
                     mapIntent.putExtras(extras);
+                    mapIntent.putExtra("page", getIntent().getIntExtra("page", 1));
                     DummyContent.ITEM_MAP.clear();
                     DummyContent.ITEMS.clear();
 

@@ -88,12 +88,14 @@ public class WitcomProgramActivity extends AppCompatActivity {
         new DummyContent(getApplicationContext());
 
         Bundle bundle = getIntent().getExtras();
-        String not = bundle.getString("fromNotification", null);
-        if (not != null) {
-            Intent intent = new Intent(this, ConferenceDetailActivity.class);
-            intent.putExtra(ConferenceDetailFragment.ARG_ITEM_ID, not);
+        if (bundle != null) {
+            String not = bundle.getString("fromNotification", "notNotification");
+            if (!not.equals("notNotification")) {
+                Intent intent = new Intent(this, ConferenceDetailActivity.class);
+                intent.putExtra(ConferenceDetailFragment.ARG_ITEM_ID, not);
 
-            this.startActivity(intent);
+                this.startActivity(intent);
+            }
         }
     }
 

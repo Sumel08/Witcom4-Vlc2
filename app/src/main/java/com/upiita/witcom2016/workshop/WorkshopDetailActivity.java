@@ -126,7 +126,14 @@ public class WorkshopDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, WitcomWorkshopActivity.class));
+            Intent intent = new Intent(this, WitcomWorkshopActivity.class);
+            Bundle extras = new Bundle();
+            extras.putInt("city_id",getIntent().getIntExtra("city_id", 0));
+            extras.putString("city_name", getIntent().getExtras().getString("city_name"));
+            intent.putExtras(extras);
+            DummyContent.ITEM_MAP.clear();
+            DummyContent.ITEMS.clear();
+            navigateUpTo(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
